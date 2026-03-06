@@ -1,0 +1,19 @@
+.hero {
+  position: relative;
+}
+.hero__inner {
+  z-index: 2;
+}
+.hero__headline {
+  font-size: 2.5rem;
+}
+.hero--large .hero__headline {
+  font-size: 4rem;
+}
+.hero__sub {
+  opacity: 0.9;
+}
+.hero__cta {
+  /* placeholder for hero CTA styles (add overrides here) */
+  display: inline-block;
+}

@@ -5,13 +5,15 @@
     "blocks": [
       {
         "_type": "hero",
-        "brandTitle": "Your Site",
-        "headline": "Create something beautiful",
-        "subheadline": "A minimal, content-first Next.js template",
-        "cta": { "label": "See examples", "href": "/work" },
+        "headline": "Create Something Great",
+        "subheadline": "A flexible portfolio template for creators",
+        "cta": {
+          "label": "View Work",
+          "href": "/work"
+        },
         "backgroundImage": {
-          "src": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-          "alt": "Placeholder"
+          "src": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1600&q=80",
+          "alt": "Background"
         }
       }
     ]
@@ -22,8 +24,8 @@
     "blocks": [
       {
         "_type": "text",
-        "title": "About this template",
-        "body": "<p>This is a generic portfolio template built with Next.js. Replace this text with your own content.</p>"
+        "title": "About",
+        "body": "This section can be used to introduce yourself, your brand, or your work."
       }
     ]
   },
@@ -33,11 +35,20 @@
     "blocks": [
       {
         "_type": "gallery",
-        "title": "Selected work",
+        "title": "Selected Work",
         "items": [
-          { "src": "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d", "alt": "Work 1" },
-          { "src": "https://images.unsplash.com/photo-1498050108023-c5249f4df085", "alt": "Work 2" },
-          { "src": "https://images.unsplash.com/photo-1495567720989-cebdbdd97913", "alt": "Work 3" }
+          {
+            "src": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1000&q=80",
+            "alt": "Portfolio item"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1000&q=80",
+            "alt": "Portfolio item 2"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&w=1000&q=80",
+            "alt": "Portfolio item 3"
+          }
         ]
       }
     ]
@@ -48,13 +59,8 @@
     "blocks": [
       {
         "_type": "text",
-        "title": "Get in touch",
-        "body": "<p>Email: <a href=\"mailto:hello@example.com\">hello@example.com</a></p>"
-      },
-      {
-        "_type": "cta",
-        "label": "Send a message",
-        "href": "/contact"
+        "title": "Contact",
+        "body": "Provide ways for people to reach you."
       }
     ]
   }

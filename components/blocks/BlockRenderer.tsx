@@ -3,7 +3,6 @@ import HeroBlock from "./HeroBlock";
 import GalleryBlock from "./GalleryBlock";
 import VideoBlock from "./VideoBlock";
 import TextBlock from "./TextBlock";
-import CtaBlock from "./CtaBlock";
 
 export default function BlockRenderer({ blocks = [] }: { blocks: Block[] }) {
   return (
@@ -18,8 +17,6 @@ export default function BlockRenderer({ blocks = [] }: { blocks: Block[] }) {
             return <VideoBlock key={i} {...block} />;
           case "text":
             return <TextBlock key={i} {...block} />;
-          case "cta":
-            return <CtaBlock key={i} {...block} />;
           default:
             return null;
         }

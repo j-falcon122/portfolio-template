@@ -1,0 +1,27 @@
+.gallery__items {
+  display: grid;
+  gap: 1rem;
+  /* explicit column rules as a fallback in case Tailwind utilities aren't applied */
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .gallery__items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery__items {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.gallery__item {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.gallery__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

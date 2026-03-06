@@ -1,15 +1,18 @@
-@import "tailwindcss";
+/* stylelint-disable at-rule-no-unknown, no-empty-source */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* import block-specific styles */
+@import "./styles/blocks/hero.css";
+@import "./styles/blocks/gallery.css";
+@import "./styles/blocks/text.css";
+@import "./styles/blocks/cta.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --header-height: 72px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,50 +26,49 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* ensure page content starts below the header to avoid overlap */
+  padding-top: var(--header-height);
 }
 
-/* BEM base styles for blocks */
-.hero {
-  position: relative;
-}
-.hero__inner {
-  z-index: 2;
-}
-.hero__headline {
-  font-size: 2.5rem;
-}
-.hero--large .hero__headline {
-  font-size: 4rem;
-}
-.hero__sub {
-  opacity: 0.9;
-}
-.hero__cta {
-  /* modifier for hero CTAs */
+/* Minimal nav link styles */
+.nav-link {
+  color: inherit;
+  opacity: 0.85;
+  padding: 0.25rem 0.35rem;
+  border-radius: 6px;
 }
 
-.gallery__items {
-  display: grid;
-  gap: 1rem;
+.nav-link:hover {
+  opacity: 1;
 }
-.gallery__item {
-  border-radius: 8px;
-  overflow: hidden;
+
+.nav-link--active {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  opacity: 1;
 }
-.gallery__img {
+
+/* header layout and backdrop so content is readable and not overlapped */
+header {
+  height: var(--header-height);
   display: block;
-  width: 100%;
-  height: auto;
+  /* keep header visually separated without hiding background */
+  background: rgba(255, 255, 255, 0.02);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 
-.text-block__title {
-  margin-bottom: 0.5rem;
-}
-.text-block__body {
-  line-height: 1.6;
+/* place the nav on the right and keep responsive spacing */
+.site-nav {
+  margin-left: auto;
 }
 
-.cta__button {
-  text-decoration: none;
+@media (max-width: 640px) {
+  .site-nav {
+    position: static;
+    transform: none;
+    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
-

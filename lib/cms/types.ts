@@ -1,12 +1,5 @@
 export type NavItem = { label: string; href: string };
 
-
-
-
-
-
-
-
 export type SiteSettings = {
   title: string;
   nav: NavItem[];
@@ -14,7 +7,7 @@ export type SiteSettings = {
 };
 
 export type HeroBlock = {
-  _type: "hero";
+  _type: "hero"; 
   brandTitle?: string;
   headline: string;
   subheadline?: string;
