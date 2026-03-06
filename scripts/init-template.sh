@@ -5,15 +5,26 @@ set -euo pipefail
 # Prompts for project name and author, updates package.json, removes .git, and can install deps.
 
 usage() {
-  echo "Usage: $0 [--install]"
-  echo "  --install   Run npm install after initialization"
+  echo "Usage: $0 [--install] [--git] [--remote <git-url>]"
+  echo "  --install      Run npm install after initialization"
+  echo "  --git          Initialize git and make initial commit"
+  echo "  --remote URL   Add remote origin URL after git init"
   exit 1
 }
 
 INSTALL_DEPS=false
-if [[ ${1:-} == "--install" ]]; then
-  INSTALL_DEPS=true
-fi
+INIT_GIT=false
+GIT_REMOTE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --install) INSTALL_DEPS=true; shift ;;
+    --git) INIT_GIT=true; shift ;;
+    --remote) GIT_REMOTE="$2"; shift 2 ;;
+    -h|--help) usage ;;
+    *) echo "Unknown arg: $1"; usage ;;
+  esac
+done
 
 read -rp "New project name (kebab-case) [my-portfolio]: " NEW_NAME
 NEW_NAME=${NEW_NAME:-my-portfolio}
@@ -46,7 +57,17 @@ if $INSTALL_DEPS; then
   npm install
 fi
 
+if $INIT_GIT; then
+  echo "Initializing new git repository..."
+  git init
+  git add .
+  git commit -m "Initial commit"
+  if [[ -n "$GIT_REMOTE" ]]; then
+    git remote add origin "$GIT_REMOTE"
+    echo "Added remote origin: $GIT_REMOTE"
+  fi
+fi
+
 echo "Initialization finished. Next steps:
 - edit package.json (name/description)
-- add a git remote and run: git init && git add . && git commit -m 'Initial commit'
 - run npm run dev to start the dev server"
