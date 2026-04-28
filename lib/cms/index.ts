@@ -6,10 +6,20 @@ const providers: Record<string, CmsProvider> = {
   mock,
   sanity,
 };
+let warnedUnknownProvider = false;
 
 export function getCms(): CmsProvider {
-  const key = process.env.CMS_PROVIDER || "mock";
+  const rawKey = process.env.CMS_PROVIDER ?? "mock";
+  const key = rawKey.trim().toLowerCase();
   const provider = providers[key];
-  if (!provider) throw new Error(`Unknown CMS_PROVIDER: ${key}`);
+  if (!provider) {
+    if (!warnedUnknownProvider) {
+      console.warn(
+        `[cms] Unknown CMS_PROVIDER "${rawKey}", falling back to "mock".`
+      );
+      warnedUnknownProvider = true;
+    }
+    return mock;
+  }
   return provider;
 }
