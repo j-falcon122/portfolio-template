@@ -93,8 +93,6 @@ export default function Carousel({ items = [], className = "", showControls = tr
     };
   }, [rootRef, items.length]);
 
-  const isVideo = (item: GalleryItem) => (item as any)._type === "video" || (item as any).videoUrl || (item as any).embedUrl;
-
   return (
     <div className={className}>
       <div className="embla" ref={(el) => {
@@ -103,23 +101,31 @@ export default function Carousel({ items = [], className = "", showControls = tr
       }}>
         <div className="embla__container">
           {items.map((item, idx) => {
-            const keyStr = (item as any).src || (item as any).videoUrl || (item as any).embedUrl || idx;
+            const keyStr =
+              item.type === "image"
+                ? item.src
+                : item.embedUrl || item.videoUrl || item.src || idx;
             return (
               <div key={keyStr} className="embla__slide">
-              {!isVideo(item) ? (
-                <Image src={(item as any).src} alt={(item as any).alt || ""} width={1600} height={900} className="w-full h-auto object-cover" />
-              ) : (item as any).videoUrl ? (
-                <video src={(item as any).videoUrl} controls poster={(item as any).poster} className="w-full h-auto" />
-              ) : (item as any).embedUrl ? (
+              {item.type === "image" ? (
+                <Image src={item.src} alt={item.alt || ""} width={1600} height={900} className="w-full h-auto object-cover" />
+              ) : item.embedUrl ? (
                 <iframe
-                  src={(item as any).embedUrl}
-                  title={(item as any).alt || "Video"}
+                  src={item.embedUrl}
+                  title={item.alt || "Video"}
                   className="w-full h-full"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
-              ) : null}
+              ) : (
+                <video
+                  src={item.videoUrl ?? item.src}
+                  controls
+                  poster={item.poster?.src}
+                  className="w-full h-auto"
+                />
+              )}
               </div>
             );
           })}

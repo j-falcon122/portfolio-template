@@ -99,6 +99,7 @@ function pageGroq(slug: string): string {
       items[]{
         _type,
         videoUrl,
+        embedUrl,
         "src": coalesce(asset->url, src),
         "alt": coalesce(alt, asset->altText)
         ,
@@ -186,13 +187,17 @@ function normalizeGallery(raw: Record<string, unknown>): GalleryBlock {
           : undefined;
 
       if (type === "videoItem" || videoUrl) {
+        const embedUrl =
+          typeof it.embedUrl === "string" ? it.embedUrl : undefined;
         const videoSrc = videoUrl || src;
-        if (!videoSrc) continue;
+        if (!videoSrc && !embedUrl) continue;
         items.push({
           type: "video",
-          src: videoSrc,
+          src: videoSrc || embedUrl || "",
           ...(alt ? { alt } : {}),
           ...(poster ? { poster } : {}),
+          ...(embedUrl ? { embedUrl } : {}),
+          ...(videoUrl ? { videoUrl } : {}),
         });
         continue;
       }
@@ -226,10 +231,19 @@ function normalizeVideo(raw: Record<string, unknown>): VideoBlock {
 }
 
 function normalizeText(raw: Record<string, unknown>): TextBlock {
+  const imageRaw = raw.image;
+  let image: TextBlock["image"];
+  if (isRecord(imageRaw) && typeof imageRaw.src === "string") {
+    image = {
+      src: imageRaw.src,
+      ...(typeof imageRaw.alt === "string" ? { alt: imageRaw.alt } : {}),
+    };
+  }
   return {
     _type: "text",
     ...(typeof raw.title === "string" ? { title: raw.title } : {}),
     body: typeof raw.body === "string" ? raw.body : "",
+    ...(image ? { image } : {}),
   };
 }
 

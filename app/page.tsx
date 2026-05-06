@@ -8,12 +8,12 @@ export default async function HomePage() {
   const pages = await Promise.all(slugs.map((s) => cms.getPageBySlug(s)));
 
   return (
-    <main>
+    <>
       {pages.map((p, i) => (
         <section id={p?.slug || `section-${i}`} key={p?.slug || i} className="page-section">
-          <BlockRenderer pageSlug={p?.slug} blocks={p?.blocks || []} />
+          <BlockRenderer blocks={p?.blocks || []} />
         </section>
       ))}
-    </main>
+    </>
   );
 }

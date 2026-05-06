@@ -7,7 +7,7 @@ export type SiteSettings = {
 };
 
 export type HeroBlock = {
-  _type: "hero"; 
+  _type: "hero";
   brandTitle?: string;
   headline: string;
   subheadline?: string;
@@ -15,22 +15,28 @@ export type HeroBlock = {
   backgroundImage?: { src: string; alt?: string };
 };
 
+/** Gallery row used by Carousel and GalleryBlock (Sanity resolves to discriminated union on `type`) */
+export type GalleryImageItem = {
+  type: "image";
+  src: string;
+  alt?: string;
+};
+
+export type GalleryVideoItem = {
+  type: "video";
+  src: string;
+  alt?: string;
+  poster?: { src: string; alt?: string };
+  embedUrl?: string;
+  videoUrl?: string;
+};
+
+export type GalleryItem = GalleryImageItem | GalleryVideoItem;
+
 export type GalleryBlock = {
   _type: "gallery";
   title?: string;
-  items: (
-    | {
-        type: "image";
-        src: string;
-        alt?: string;
-      }
-    | {
-        type: "video";
-        src: string;
-        alt?: string;
-        poster?: { src: string; alt?: string };
-      }
-  )[];
+  items: GalleryItem[];
 };
 
 export type VideoBlock = {
@@ -44,6 +50,7 @@ export type TextBlock = {
   _type: "text";
   title?: string;
   body: string;
+  image?: { src: string; alt?: string };
 };
 
 export type CtaBlock = {
