@@ -54,26 +54,6 @@ Tips
 - Keep this repo as a lightweight starting point. Remove unused examples and dependencies before publishing.
 - Use environment variables for secrets; don't commit `.env` files. See `.gitignore`.
 
-Admin & CMS integration
-
-This template includes a lightweight CMS abstraction and an `/admin` route protected by NextAuth (GitHub provider). Follow these steps to enable editing with Sanity Studio and secure access:
-
-1. Copy `.env.example` to `.env.local` and fill in the values.
-2. Create a GitHub OAuth App (Developer Settings → OAuth Apps) and add the callback URL:
-   - Local dev: `http://localhost:3000/api/auth/callback/github`
-   - Production: `https://your-site.com/api/auth/callback/github`
-3. Set `GITHUB_ID` and `GITHUB_SECRET` in `.env.local`.
-4. Set `NEXTAUTH_SECRET` (generate a random 32+ char string).
-5. If you plan to use Sanity:
-   - Create a Sanity project and Studio, define schemas that map to `lib/cms/types.ts` (page, siteSettings, blocks).
-   - Deploy the Studio (Sanity hosting or Vercel) and set `SANITY_STUDIO_URL`.
-   - Set `CMS_PROVIDER=sanity` and `SANITY_PROJECT_ID` in `.env.local`.
-6. Run the dev server and visit `/admin`. Unauthenticated users will be prompted to sign in with GitHub. Authenticated users will be redirected to the Studio URL.
-
-Notes:
-- The current admin page redirects to the Studio; optionally I can add an in-app admin UI if you prefer editing inside this Next app.
-- To restrict admin access to a GitHub org or user list, set `ADMIN_GITHUB_ORG` or `ADMIN_GITHUB_USERS` in `.env.local` and I can wire the server-side check.
-
 License
 
 This template is MIT licensed. See `LICENSE`.
@@ -97,3 +77,7 @@ Sanity setup checklist
 - Create one `siteSettings` document.
 - Create `page` documents with slugs: `home`, `about`, `work`, `contact`.
 - Publish documents, then refresh the Next.js app.
+
+QA vs production environments
+
+- See `.env.example` for suggested variables (`SITE_ENV`, `SANITY_DATASET`, `ADMIN_NAV_URL`). The app infers **local** vs **qa** vs **production** from `SITE_ENV` and, on Vercel, `VERCEL_ENV` (preview → QA). **Admin** points at `http://localhost:3333` only when the deploy is treated as **local**; QA and production should set `ADMIN_NAV_URL` to your hosted Sanity Studio in each hosting environment.

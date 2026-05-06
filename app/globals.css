@@ -28,16 +28,15 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  /* ensure page content starts below the header to avoid overlap */
-  padding-top: var(--header-height);
 }
 
 /* Minimal nav link styles */
 .nav-link {
   color: inherit;
-  opacity: 0.85;
+  opacity: 0.9;
   padding: 0.25rem 0.35rem;
   border-radius: 6px;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
 }
 
 .nav-link:hover {
@@ -45,19 +44,8 @@ body {
 }
 
 .nav-link--active {
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.14);
   opacity: 1;
-}
-
-/* header layout and backdrop so content is readable and not overlapped */
-header {
-  height: var(--header-height);
-  display: block;
-  /* keep header visually separated without hiding background */
-  background: rgba(255, 255, 255, 0.02);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
 }
 
 /* place the nav on the right and keep responsive spacing */
