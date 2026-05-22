@@ -1,4 +1,5 @@
 import { createClient, type SanityClient } from "@sanity/client";
+import { normalizePageSlug } from "@/lib/normalizePageSlug";
 import type {
   AboutBlock,
   Block,
@@ -62,7 +63,8 @@ const SITE_SETTINGS_GROQ = `coalesce(
 }`;
 
 function pageGroq(slug: string): string {
-  const normalized = (slug || "").trim();
+  const normalized = normalizePageSlug(slug);
+  const docId = JSON.stringify(`page-${normalized}`);
   const candidates = new Set<string>([normalized]);
   if (normalized === "home") {
     candidates.add("/");
@@ -79,7 +81,10 @@ function pageGroq(slug: string): string {
       return `(slug.current == ${safe} || slug == ${safe})`;
     })
     .join(" || ");
-  return `*[_type == "page" && (${slugFilter})][0]{
+  return `coalesce(
+    *[_type == "page" && _id == ${docId}][0],
+    *[_type == "page" && (${slugFilter})][0]
+  ){
     "slug": coalesce(slug.current, slug),
     title,
     blocks[]{
@@ -352,7 +357,9 @@ function normalizeBlock(raw: unknown): Block | null {
 
 function normalizePage(raw: unknown): Page | null {
   if (!isRecord(raw)) return null;
-  const slug = typeof raw.slug === "string" ? raw.slug : "";
+  const slug = normalizePageSlug(
+    typeof raw.slug === "string" ? raw.slug : ""
+  );
   if (!slug) return null;
   const blocksRaw = raw.blocks;
   const blocks: Block[] = [];

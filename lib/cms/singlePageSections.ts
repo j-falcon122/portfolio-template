@@ -1,4 +1,5 @@
 import type { SiteSettings } from "@/lib/cms/types";
+import { normalizePageSlug } from "@/lib/normalizePageSlug";
 
 /** Fallback order when CMS omits `singlePageSectionSlugs` or sends an empty list. */
 export const DEFAULT_SINGLE_PAGE_SECTION_SLUGS = [
@@ -14,7 +15,7 @@ export function resolveSinglePageSectionSlugs(site: SiteSettings): string[] {
     return [...DEFAULT_SINGLE_PAGE_SECTION_SLUGS];
   }
   const trimmed = raw
-    .map((s) => (typeof s === "string" ? s.trim() : ""))
+    .map((s) => (typeof s === "string" ? normalizePageSlug(s) : ""))
     .filter(Boolean);
   return trimmed.length > 0 ? trimmed : [...DEFAULT_SINGLE_PAGE_SECTION_SLUGS];
 }

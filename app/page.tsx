@@ -1,5 +1,6 @@
 import { getCms } from "@/lib/cms";
 import { resolveSinglePageSectionSlugs } from "@/lib/cms/singlePageSections";
+import { normalizePageSlug } from "@/lib/normalizePageSlug";
 import BlockRenderer from "@/components/blocks/BlockRenderer";
 
 export default async function HomePage() {
@@ -17,18 +18,21 @@ export default async function HomePage() {
 
   return (
     <>
-      {pages.map((p, i) => (
+      {pages.map((p, i) => {
+        const slug = normalizePageSlug(p?.slug ?? sectionSlugs[i] ?? `section-${i}`);
+        return (
         <section
-          id={p?.slug || `section-${i}`}
-          key={p?.slug || i}
-          className={`page-section${p?.slug ? ` page-section--${p.slug}` : ""}`}
-          aria-label={p?.title || p?.slug}
+          id={slug}
+          key={slug}
+          className={`page-section page-section--${slug}`}
+          aria-label={p?.title || slug}
         >
           <div className="page-section__inner">
             <BlockRenderer blocks={p?.blocks || []} />
           </div>
         </section>
-      ))}
+        );
+      })}
     </>
   );
 }

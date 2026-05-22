@@ -14,7 +14,16 @@ export const pageType = defineType({
       name: "slug",
       type: "slug",
       options: {source: "title", maxLength: 96},
-      validation: (rule) => rule.required(),
+      description: "Use plain slugs without a leading slash (e.g. work, not /work).",
+      validation: (rule) =>
+        rule.required().custom((slug) => {
+          const current = slug?.current?.trim();
+          if (!current) return true;
+          if (current.startsWith("/")) {
+            return 'Remove the leading "/" — use work, about, home, contact';
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "blocks",

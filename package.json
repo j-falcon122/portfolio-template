@@ -11,6 +11,7 @@
     "test:sanity": "node --env-file=.env.local scripts/test-sanity.mjs",
     "upload:videos": "node --env-file=.env.local scripts/upload-videos-to-sanity.mjs",
     "seed:sanity": "node --env-file=.env.local scripts/seed-sanity-from-mock.mjs",
+    "cleanup:sanity-pages": "node --env-file=.env.local scripts/cleanup-sanity-duplicate-pages.mjs",
     "sanity:dev": "sanity dev",
     "sanity:dev:polling": "CHOKIDAR_USEPOLLING=1 sanity dev",
     "sanity:deploy": "sanity deploy"

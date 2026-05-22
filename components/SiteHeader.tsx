@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type MouseEvent } from "react";
 import type { SiteSettings } from "@/lib/cms/types";
 import { resolveNavHref } from "@/lib/resolveNavHref";
-import { scrollToPageSection } from "@/lib/scrollToPageSection";
+import { scrollToPageSectionWhenReady } from "@/lib/scrollToPageSection";
 
 function sectionKeyFromNavHref(href: string): string | null {
   if (href === "/" || href === "") return "home";
@@ -50,12 +50,18 @@ export default function SiteHeader({
     e: MouseEvent<HTMLAnchorElement>,
     resolvedHref: string
   ) {
-    if (!singlePage || !isHome || !resolvedHref.startsWith("/#")) return;
+    if (!singlePage || !resolvedHref.startsWith("/#")) return;
     e.preventDefault();
     const sectionId = resolvedHref.slice(2);
+
+    if (!isHome) {
+      window.location.assign(resolvedHref);
+      return;
+    }
+
     window.history.pushState(null, "", resolvedHref);
     setHash(resolvedHref.slice(1));
-    scrollToPageSection(sectionId);
+    scrollToPageSectionWhenReady(sectionId);
   }
 
   function isNavActive(itemHref: string): boolean {

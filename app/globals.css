@@ -13,6 +13,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
 }
 
 :root {
@@ -21,17 +22,11 @@ html {
   --header-height: 64px;
 }
 
-/* Single-page stack: one viewport per section, snap on scroll */
-html:has(.page-section) {
-  scroll-snap-type: y proximity;
-}
-
+/* Single-page stack: one viewport per section (no scroll-snap — it breaks hash nav) */
 .page-section {
   min-height: 100dvh;
   min-height: 100vh;
   scroll-margin-top: var(--header-height);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .page-section__inner {

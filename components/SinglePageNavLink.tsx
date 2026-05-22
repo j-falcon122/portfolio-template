@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { NavigationMode } from "@/lib/cms/types";
 import { resolveNavHref } from "@/lib/resolveNavHref";
-import { scrollToPageSection } from "@/lib/scrollToPageSection";
+import { scrollToPageSectionWhenReady } from "@/lib/scrollToPageSection";
 
 type Props = {
   href: string;
@@ -33,7 +33,7 @@ export default function SinglePageNavLink({
           e.preventDefault();
           const sectionId = resolved.slice(2);
           window.history.pushState(null, "", resolved);
-          scrollToPageSection(sectionId);
+          scrollToPageSectionWhenReady(sectionId);
         }}
       >
         {children}

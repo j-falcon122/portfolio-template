@@ -2,17 +2,12 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import {
-  normalizePageSectionId,
-  scrollToPageSection,
-} from "@/lib/scrollToPageSection";
+import { scrollToPageSectionWhenReady } from "@/lib/scrollToPageSection";
 
 function syncScrollFromHash() {
   const raw = typeof window !== "undefined" ? window.location.hash : "";
   const id = raw && raw.length > 1 ? decodeURIComponent(raw.slice(1)) : "home";
-  requestAnimationFrame(() => {
-    scrollToPageSection(id, raw ? "smooth" : "auto");
-  });
+  scrollToPageSectionWhenReady(id, raw ? "smooth" : "auto");
 }
 
 /** Ensures `/` scrolls to the correct section for `location.hash` (with header offset). */
