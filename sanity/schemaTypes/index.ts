@@ -8,6 +8,7 @@ import {
   heroBlockType,
   textBlockType,
   videoBlockType,
+  videoCarouselBlockType,
 } from "./pageBlocks";
 
 export const schemaTypes = [
@@ -16,6 +17,7 @@ export const schemaTypes = [
   heroBlockType,
   galleryBlockType,
   videoBlockType,
+  videoCarouselBlockType,
   textBlockType,
   ctaBlockType,
   aboutBlockType,

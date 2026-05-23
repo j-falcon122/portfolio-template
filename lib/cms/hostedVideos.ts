@@ -1,6 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { Block, GalleryBlock, Page, VideoBlock } from "./types";
+import type {
+  Block,
+  GalleryBlock,
+  Page,
+  VideoBlock,
+  VideoCarouselBlock,
+} from "./types";
 
 /** Maps local/public paths (or keys) to HTTPS CDN URLs — see content/hosted-videos.example.json */
 export type HostedVideoMap = Record<string, string>;
@@ -61,9 +67,23 @@ function applyToVideo(block: VideoBlock, map: HostedVideoMap): VideoBlock {
   return { ...block, videoUrl: resolveUrl(block.videoUrl, map) };
 }
 
+function applyToVideoCarousel(
+  block: VideoCarouselBlock,
+  map: HostedVideoMap
+): VideoCarouselBlock {
+  return {
+    ...block,
+    items: block.items.map((item) => {
+      if (!item.videoUrl) return item;
+      return { ...item, videoUrl: resolveUrl(item.videoUrl, map) };
+    }),
+  };
+}
+
 function applyToBlock(block: Block, map: HostedVideoMap): Block {
   if (block._type === "gallery") return applyToGallery(block, map);
   if (block._type === "video") return applyToVideo(block, map);
+  if (block._type === "videoCarousel") return applyToVideoCarousel(block, map);
   return block;
 }
 

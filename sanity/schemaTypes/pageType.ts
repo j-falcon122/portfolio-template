@@ -32,6 +32,7 @@ export const pageType = defineType({
         defineArrayMember({type: "hero"}),
         defineArrayMember({type: "gallery"}),
         defineArrayMember({type: "video"}),
+        defineArrayMember({type: "videoCarousel"}),
         defineArrayMember({type: "textBlock"}),
         defineArrayMember({type: "cta"}),
         defineArrayMember({type: "about"}),

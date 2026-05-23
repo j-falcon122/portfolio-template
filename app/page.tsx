@@ -21,16 +21,16 @@ export default async function HomePage() {
       {pages.map((p, i) => {
         const slug = normalizePageSlug(p?.slug ?? sectionSlugs[i] ?? `section-${i}`);
         return (
-        <section
-          id={slug}
-          key={slug}
-          className={`page-section page-section--${slug}`}
-          aria-label={p?.title || slug}
-        >
-          <div className="page-section__inner">
-            <BlockRenderer blocks={p?.blocks || []} />
-          </div>
-        </section>
+          <section
+            id={slug}
+            key={slug}
+            className={`page-section page-section--${slug}`}
+            aria-label={p?.title || slug}
+          >
+            <div className="page-section__inner">
+              <BlockRenderer blocks={p?.blocks || []} />
+            </div>
+          </section>
         );
       })}
     </>

@@ -159,7 +159,11 @@ async function convertBlock(block, hosted) {
         headline: block.headline || "Home",
         ...(block.brandTitle ? { brandTitle: block.brandTitle } : {}),
         ...(block.subheadline ? { subheadline: block.subheadline } : {}),
-        ...(block.cta ? { cta: block.cta } : {}),
+        ...(block.ctas?.length
+          ? { ctas: block.ctas }
+          : block.cta
+            ? { ctas: [block.cta] }
+            : {}),
       };
       if (block.backgroundImage?.src) {
         const bg = await imageFieldFromSrc(
@@ -225,6 +229,46 @@ async function convertBlock(block, hosted) {
         ...(block.title ? { title: block.title } : {}),
         ...(block.embedUrl ? { embedUrl: block.embedUrl } : {}),
         ...(videoUrl?.startsWith("https://") ? { videoUrl } : {}),
+      };
+    }
+
+    case "videoCarousel": {
+      const items = [];
+      for (const item of block.items || []) {
+        if (item.embedUrl) {
+          items.push({
+            _type: "carouselVideoItem",
+            _key: `embed-${String(item.title || item.embedUrl).replace(/\W/g, "").slice(0, 24)}`,
+            ...(item.title ? { title: item.title } : {}),
+            embedUrl: item.embedUrl,
+            ...(item.alt ? { alt: item.alt } : {}),
+          });
+          continue;
+        }
+        const videoUrl = resolveVideoUrl(item.videoUrl || item.src, hosted);
+        if (!videoUrl?.startsWith("https://")) {
+          console.warn(`  skip carousel item (no HTTPS url): ${item.title || item.alt}`);
+          continue;
+        }
+        const row = {
+          _type: "carouselVideoItem",
+          _key: `vc-${videoUrl.slice(-16).replace(/\W/g, "")}`,
+          videoUrl,
+          ...(item.title ? { title: item.title } : {}),
+          ...(item.alt ? { alt: item.alt } : {}),
+        };
+        if (item.poster?.src) {
+          const poster = await imageFieldFromSrc(item.poster.src, item.poster.alt);
+          if (poster) row.poster = poster;
+        }
+        items.push(row);
+      }
+      if (!items.length) return null;
+      return {
+        _type: "videoCarousel",
+        _key: key,
+        ...(block.title ? { title: block.title } : {}),
+        items,
       };
     }
 

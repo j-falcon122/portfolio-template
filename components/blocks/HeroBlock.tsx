@@ -8,11 +8,19 @@ export default async function HeroBlock({
   headline,
   subheadline,
   cta,
+  ctas,
   backgroundImage
 }: HeroBlockType) {
   const site = await getCms().getSiteSettings();
+  const heroCtas =
+    ctas?.length
+      ? ctas
+      : cta?.label && cta?.href
+        ? [cta]
+        : [];
+
   return (
-    <section className="relative -mt-16 min-h-screen w-full overflow-hidden">
+    <section className="relative -mt-[var(--header-height)] min-h-screen w-full overflow-hidden">
       {backgroundImage?.src ? (
         <>
           <Image
@@ -29,28 +37,33 @@ export default async function HeroBlock({
         <div className="absolute inset-0 bg-neutral-900" />
       )}
 
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-6 text-center text-white">
-        {brandTitle ? <div className="mb-6 text-sm tracking-[0.18em] opacity-90 uppercase">{brandTitle}</div> : null}
+      <div className="relative z-10 flex min-h-screen w-full items-center justify-center">
+        <div className="hero__content flex flex-col items-center justify-center px-6 py-10 text-center text-white">
+          {brandTitle ? (
+            <div className="hero__brand mb-6 text-sm tracking-[0.18em] uppercase">{brandTitle}</div>
+          ) : null}
 
-        <h1 className="text-5xl font-bold leading-tight md:text-7xl">
-          {headline}
-        </h1>
+          <h1 className="hero__headline text-5xl font-bold leading-tight md:text-7xl">{headline}</h1>
 
-        {subheadline ? (
-          <p className="mt-5 max-w-3xl text-lg opacity-90 md:text-2xl">
-            {subheadline}
-          </p>
-        ) : null}
+          {subheadline ? (
+            <p className="hero__sub mt-5 max-w-3xl text-lg md:text-2xl">{subheadline}</p>
+          ) : null}
 
-        {cta?.href && cta?.label ? (
-          <SinglePageNavLink
-            href={cta.href}
-            navigationMode={site.navigationMode}
-            className="mt-10 inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-sm font-medium text-black transition hover:bg-neutral-100"
-          >
-            {cta.label}
-          </SinglePageNavLink>
-        ) : null}
+          {heroCtas.length ? (
+            <div className="hero__ctas">
+              {heroCtas.map((item, index) => (
+                <SinglePageNavLink
+                  key={`${item.href}-${index}`}
+                  href={item.href}
+                  navigationMode={site.navigationMode}
+                  className={`hero__cta${index > 0 ? " hero__cta--secondary" : ""}`}
+                >
+                  {item.label}
+                </SinglePageNavLink>
+              ))}
+            </div>
+          ) : null}
+        </div>
       </div>
     </section>
   );

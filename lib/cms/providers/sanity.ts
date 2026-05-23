@@ -13,6 +13,8 @@ import type {
   SiteSettings,
   TextBlock,
   VideoBlock,
+  VideoCarouselBlock,
+  VideoCarouselItem,
 } from "../types";
 
 /**
@@ -22,7 +24,7 @@ import type {
  * - `page`: { slug (slug type or string), title, blocks: [...] }
  *
  * Block objects use `_type` matching Block union:
- * hero | gallery | video | text | cta | about | contact.
+ * hero | gallery | video | videoCarousel | text | cta | about | contact.
  * Images: use Sanity image fields; asset refs are resolved to `{ src, alt }` via GROQ.
  */
 
@@ -94,6 +96,7 @@ function pageGroq(slug: string): string {
       headline,
       subheadline,
       cta,
+      ctas[]{label, href},
       title,
       body,
       label,
@@ -109,6 +112,7 @@ function pageGroq(slug: string): string {
       stats[]{value, label},
       items[]{
         _type,
+        title,
         embedUrl,
         "videoUrl": coalesce(videoUrl, videoFile.asset->url),
         "src": coalesce(videoFile.asset->url, asset->url, src),
@@ -161,6 +165,31 @@ function normalizeNav(items: unknown): NavItem[] {
   return out;
 }
 
+function normalizeHeroCtas(raw: Record<string, unknown>): HeroBlock["ctas"] {
+  const out: NonNullable<HeroBlock["ctas"]> = [];
+
+  const ctasRaw = raw.ctas;
+  if (Array.isArray(ctasRaw)) {
+    for (const row of ctasRaw) {
+      if (!isRecord(row)) continue;
+      const label = typeof row.label === "string" ? row.label.trim() : "";
+      const href = typeof row.href === "string" ? row.href.trim() : "";
+      if (label && href) out.push({ label, href });
+    }
+  }
+
+  if (out.length) return out;
+
+  const ctaRaw = raw.cta;
+  if (isRecord(ctaRaw)) {
+    const label = typeof ctaRaw.label === "string" ? ctaRaw.label.trim() : "";
+    const href = typeof ctaRaw.href === "string" ? ctaRaw.href.trim() : "";
+    if (label && href) return [{ label, href }];
+  }
+
+  return undefined;
+}
+
 function normalizeHero(raw: Record<string, unknown>): HeroBlock {
   const bg = raw.backgroundImage;
   let backgroundImage: HeroBlock["backgroundImage"];
@@ -170,13 +199,7 @@ function normalizeHero(raw: Record<string, unknown>): HeroBlock {
       ...(typeof bg.alt === "string" ? { alt: bg.alt } : {}),
     };
   }
-  const ctaRaw = raw.cta;
-  let cta: HeroBlock["cta"];
-  if (isRecord(ctaRaw)) {
-    const label = typeof ctaRaw.label === "string" ? ctaRaw.label : "";
-    const href = typeof ctaRaw.href === "string" ? ctaRaw.href : "";
-    if (label || href) cta = { label, href };
-  }
+  const ctas = normalizeHeroCtas(raw);
   return {
     _type: "hero",
     ...(typeof raw.brandTitle === "string"
@@ -187,7 +210,7 @@ function normalizeHero(raw: Record<string, unknown>): HeroBlock {
     ...(typeof raw.subheadline === "string"
       ? { subheadline: raw.subheadline }
       : {}),
-    ...(cta ? { cta } : {}),
+    ...(ctas?.length ? { ctas } : {}),
     ...(backgroundImage ? { backgroundImage } : {}),
   };
 }
@@ -252,6 +275,54 @@ function normalizeVideo(raw: Record<string, unknown>): VideoBlock {
     ...(typeof raw.videoUrl === "string"
       ? { videoUrl: raw.videoUrl }
       : {}),
+  };
+}
+
+function normalizeCarouselVideoItem(
+  it: Record<string, unknown>
+): VideoCarouselItem | null {
+  const embedUrl =
+    typeof it.embedUrl === "string" ? it.embedUrl.trim() : undefined;
+  const videoUrl =
+    typeof it.videoUrl === "string" ? it.videoUrl.trim() : undefined;
+  const src = typeof it.src === "string" ? it.src.trim() : undefined;
+  const resolvedUrl = videoUrl || src;
+  if (!resolvedUrl && !embedUrl) return null;
+
+  const posterRaw = it.poster;
+  const poster =
+    isRecord(posterRaw) && typeof posterRaw.src === "string"
+      ? {
+          src: posterRaw.src,
+          ...(typeof posterRaw.alt === "string" ? { alt: posterRaw.alt } : {}),
+        }
+      : undefined;
+
+  return {
+    ...(typeof it.title === "string" ? { title: it.title } : {}),
+    ...(typeof it.alt === "string" ? { alt: it.alt } : {}),
+    ...(embedUrl ? { embedUrl } : {}),
+    ...(resolvedUrl ? { videoUrl: resolvedUrl } : {}),
+    ...(poster ? { poster } : {}),
+  };
+}
+
+function normalizeVideoCarousel(
+  raw: Record<string, unknown>
+): VideoCarouselBlock {
+  const itemsRaw = raw.items;
+  const items: VideoCarouselItem[] = [];
+  if (Array.isArray(itemsRaw)) {
+    for (const it of itemsRaw) {
+      if (!isRecord(it)) continue;
+      const row = normalizeCarouselVideoItem(it);
+      if (row) items.push(row);
+    }
+  }
+  return {
+    _type: "videoCarousel",
+    ...(typeof raw.title === "string" ? { title: raw.title } : {}),
+    items,
   };
 }
 
@@ -337,6 +408,8 @@ function normalizeBlock(raw: unknown): Block | null {
       return normalizeGallery(raw);
     case "video":
       return normalizeVideo(raw);
+    case "videoCarousel":
+      return normalizeVideoCarousel(raw);
     case "text":
     case "textBlock":
       return normalizeText(raw);

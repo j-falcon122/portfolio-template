@@ -11,11 +11,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const adminNav = resolveAdminNav();
 
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-white text-neutral-900">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className="min-h-screen bg-white text-neutral-900"
+        suppressHydrationWarning
+      >
         <SiteHeader site={site} adminNav={adminNav} />
         <SinglePageHashScroll />
-        <main className="pt-16">{children}</main>
+        <main>{children}</main>
         <SiteFooter site={site} />
       </body>
     </html>

@@ -4,9 +4,9 @@
 }
 
 .contact-block__inner {
-  max-width: 72rem;
+  max-width: var(--page-content-max);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding-inline: var(--page-gutter);
 }
 
 .contact-block__title {

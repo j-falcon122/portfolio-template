@@ -8,13 +8,19 @@
         "brandTitle": "Portfolio Template",
         "headline": "Content-driven sites, built to ship",
         "subheadline": "A reusable Next.js foundation with pluggable CMS providers, composable blocks, and environment-aware deployment—ready for portfolios, studios, and client work.",
-        "cta": {
-          "label": "View selected work",
-          "href": "/work"
-        },
+        "ctas": [
+          {
+            "label": "View selected work",
+            "href": "/work"
+          },
+          {
+            "label": "Start a project",
+            "href": "/contact"
+          }
+        ],
         "backgroundImage": {
-          "src": "/placeholder-hero.svg",
-          "alt": "Abstract gradient hero background"
+          "src": "/vecteezy_colourful-hot-air-balloons-floating-in-the-blue-sky-during-a_47353614.jpg",
+          "alt": "Colourful hot air balloons floating in a blue sky"
         }
       }
     ]
@@ -73,26 +79,6 @@
             "alt": "Editorial layout for a publication microsite"
           },
           {
-            "type": "video",
-            "src": "/video-from-rawpixel-id-26889016-sd.mp4",
-            "videoUrl": "/video-from-rawpixel-id-26889016-sd.mp4",
-            "alt": "Lifestyle motion clip — rawpixel stock footage",
-            "poster": {
-              "src": "/placeholder-work-4.svg",
-              "alt": "Poster frame for lifestyle clip"
-            }
-          },
-          {
-            "type": "video",
-            "src": "/video-from-rawpixel-id-17154898-sd.mp4",
-            "videoUrl": "/video-from-rawpixel-id-17154898-sd.mp4",
-            "alt": "Product and brand motion — rawpixel stock footage",
-            "poster": {
-              "src": "/placeholder-work-5.svg",
-              "alt": "Poster frame for product motion clip"
-            }
-          },
-          {
             "type": "image",
             "src": "/placeholder-work-6.svg",
             "alt": "Mobile-first landing page for a SaaS onboarding flow"
@@ -100,19 +86,30 @@
         ]
       },
       {
-        "_type": "video",
-        "title": "Travel — train journey",
-        "videoUrl": "/vecteezy_young-woman-travelling-on-a-train-during-the-daytime-looking_31113935.mp4"
-      },
-      {
-        "_type": "video",
-        "title": "Lifestyle clip",
-        "videoUrl": "/video-from-rawpixel-id-26889016-sd.mp4"
-      },
-      {
-        "_type": "video",
-        "title": "Product motion",
-        "videoUrl": "/video-from-rawpixel-id-17154898-sd.mp4"
+        "_type": "videoCarousel",
+        "title": "Motion reel",
+        "items": [
+          {
+            "title": "Travel — train journey",
+            "videoUrl": "/vecteezy_young-woman-travelling-on-a-train-during-the-daytime-looking_31113935.mp4"
+          },
+          {
+            "title": "Lifestyle clip",
+            "videoUrl": "/video-from-rawpixel-id-26889016-sd.mp4",
+            "poster": {
+              "src": "/placeholder-work-4.svg",
+              "alt": "Poster frame for lifestyle clip"
+            }
+          },
+          {
+            "title": "Product motion",
+            "videoUrl": "/video-from-rawpixel-id-17154898-sd.mp4",
+            "poster": {
+              "src": "/placeholder-work-5.svg",
+              "alt": "Poster frame for product motion clip"
+            }
+          }
+        ]
       },
       {
         "_type": "cta",

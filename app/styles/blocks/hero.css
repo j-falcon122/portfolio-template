@@ -1,6 +1,70 @@
 .hero {
   position: relative;
 }
+
+.hero__content {
+  width: 80vw;
+  max-width: 80vw;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(0 0 0 / 62%);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 20%);
+  color: #fff;
+}
+
+.hero__content h1,
+.hero__content p,
+.hero__content a,
+.hero__content .hero__brand {
+  color: #fff;
+}
+
+.hero__content a.hero__cta--secondary,
+.hero__content a.hero__cta--secondary:visited {
+  color: #171717;
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  background-color: transparent;
+  padding: 0.75rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.hero__cta:hover {
+  background-color: rgb(255 255 255 / 12%);
+  color: #fff;
+}
+
+.hero__cta--secondary {
+  background-color: #fff;
+  color: #171717;
+}
+
+.hero__cta--secondary:hover {
+  background-color: rgb(255 255 255 / 88%);
+  color: #171717;
+}
+
 .hero__inner {
   z-index: 2;
 }
@@ -11,9 +75,5 @@
   font-size: 4rem;
 }
 .hero__sub {
-  opacity: 0.9;
-}
-.hero__cta {
-  /* placeholder for hero CTA styles (add overrides here) */
-  display: inline-block;
+  opacity: 0.95;
 }

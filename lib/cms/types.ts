@@ -16,12 +16,16 @@ export type SiteSettings = {
   singlePageSectionSlugs?: string[];
 };
 
+export type HeroCta = { label: string; href: string };
+
 export type HeroBlock = {
   _type: "hero";
   brandTitle?: string;
   headline: string;
   subheadline?: string;
-  cta?: { label: string; href: string };
+  /** @deprecated Use `ctas` — kept for backward compatibility with older content. */
+  cta?: HeroCta;
+  ctas?: HeroCta[];
   backgroundImage?: { src: string; alt?: string };
 };
 
@@ -54,6 +58,20 @@ export type VideoBlock = {
   title?: string;
   embedUrl?: string;
   videoUrl?: string;
+};
+
+export type VideoCarouselItem = {
+  title?: string;
+  videoUrl?: string;
+  embedUrl?: string;
+  alt?: string;
+  poster?: { src: string; alt?: string };
+};
+
+export type VideoCarouselBlock = {
+  _type: "videoCarousel";
+  title?: string;
+  items: VideoCarouselItem[];
 };
 
 export type TextBlock = {
@@ -92,6 +110,7 @@ export type Block =
   | HeroBlock
   | GalleryBlock
   | VideoBlock
+  | VideoCarouselBlock
   | TextBlock
   | CtaBlock
   | AboutBlock
