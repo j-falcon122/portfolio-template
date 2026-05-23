@@ -43,6 +43,17 @@
   color: #404040;
 }
 
+.contact-block__info-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.contact-block__info-link:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 2px;
+}
+
 .contact-block__social {
   margin-top: 2rem;
 }
@@ -100,6 +111,13 @@
   border: 1px solid #d4d4d4;
   border-radius: 0.5rem;
   padding: 0.55rem 0.75rem;
+}
+
+.contact-block__input:focus-visible,
+.contact-block__textarea:focus-visible,
+.contact-block__button:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 2px;
 }
 
 .contact-block__textarea {

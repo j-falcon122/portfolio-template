@@ -19,7 +19,13 @@ export default function VideoBlock({ title, embedUrl, videoUrl }: VideoBlockType
           />
         </div>
       ) : videoUrl ? (
-        <video controls className="w-full rounded-lg" playsInline preload="metadata">
+        <video
+          controls
+          className="w-full rounded-lg"
+          playsInline
+          preload="metadata"
+          aria-label={title || "Video"}
+        >
           <source src={videoUrl} />
           Your browser does not support the video tag.
         </video>

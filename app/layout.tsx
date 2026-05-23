@@ -3,6 +3,7 @@ import { getCms } from "@/lib/cms";
 import { resolveAdminNav } from "@/lib/resolveAdminNav";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import SkipLink from "@/components/SkipLink";
 import SinglePageHashScroll from "@/components/SinglePageHashScroll";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,9 +17,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         className="min-h-screen bg-white text-neutral-900"
         suppressHydrationWarning
       >
+        <SkipLink />
         <SiteHeader site={site} adminNav={adminNav} />
         <SinglePageHashScroll />
-        <main>{children}</main>
+        <main id="main-content">{children}</main>
         <SiteFooter site={site} />
       </body>
     </html>

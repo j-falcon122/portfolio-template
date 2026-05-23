@@ -29,6 +29,26 @@
   overflow: hidden;
 }
 
+.gallery__item--button {
+  display: block;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+.gallery__item--button:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery__item .gallery__img {
+    transition: none;
+  }
+}
+
 .gallery__item .gallery__img {
   display: block;
   width: 100%;
