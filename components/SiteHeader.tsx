@@ -27,6 +27,7 @@ export default function SiteHeader({
   const isHome = pathname === "/";
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMouseNearTop, setIsMouseNearTop] = useState(false);
+  const [isHeaderFocused, setIsHeaderFocused] = useState(false);
   const hasMounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -64,7 +65,7 @@ export default function SiteHeader({
     };
   }, []);
 
-  const headerVisible = !hasMounted || isAtTop || isMouseNearTop;
+  const headerVisible = !hasMounted || isAtTop || isMouseNearTop || isHeaderFocused;
 
   // Match SSR on first paint; apply hash/scroll styling after mount to avoid hydration mismatch
   const useHeroNavStyle = hasMounted
@@ -105,11 +106,22 @@ export default function SiteHeader({
     );
   }
 
+  function navAriaCurrent(itemHref: string, active: boolean) {
+    if (!active) return undefined;
+    return singlePage && isHome ? "location" : "page";
+  }
+
   return (
     <header
       className={`site-header fixed inset-x-0 top-0 z-50 w-full transition-transform duration-300 ease-out ${headerState} ${
         headerVisible ? "translate-y-0" : "-translate-y-full pointer-events-none"
       }`}
+      onFocusCapture={() => setIsHeaderFocused(true)}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setIsHeaderFocused(false);
+        }
+      }}
     >
       <div className="site-header__inner flex h-[var(--header-height)] w-full max-w-full items-center justify-between gap-6 px-6 sm:px-10 lg:px-12">
         <div className="site-header__brand-wrap shrink-0">
@@ -131,11 +143,12 @@ export default function SiteHeader({
           )}
         </div>
 
-        <nav className="site-nav flex shrink-0 items-center justify-end gap-6 text-sm">
+        <nav className="site-nav flex shrink-0 items-center justify-end gap-6 text-sm" aria-label="Main">
           {site.nav?.map((item) => {
             const resolvedHref = resolveNavHref(item.href, navMode);
             const active = isNavActive(item.href);
             const className = `nav-link no-underline ${active ? "nav-link--active" : ""}`;
+            const ariaCurrent = navAriaCurrent(item.href, active);
             // Next.js <Link> often skips native fragment scroll on `/`. Use <a> for same-page hashes.
             const useNativeAnchor = resolvedHref.startsWith("/#");
             if (useNativeAnchor) {
@@ -144,6 +157,7 @@ export default function SiteHeader({
                   key={`${item.href}-${resolvedHref}`}
                   href={resolvedHref}
                   className={className}
+                  aria-current={ariaCurrent}
                   onClick={(e) => handleSinglePageNavClick(e, resolvedHref)}
                 >
                   {item.label}
@@ -151,7 +165,12 @@ export default function SiteHeader({
               );
             }
             return (
-              <Link key={`${item.href}-${resolvedHref}`} href={resolvedHref} className={className}>
+              <Link
+                key={`${item.href}-${resolvedHref}`}
+                href={resolvedHref}
+                className={className}
+                aria-current={ariaCurrent}
+              >
                 {item.label}
               </Link>
             );
@@ -171,6 +190,7 @@ export default function SiteHeader({
                     ? undefined
                     : "noopener noreferrer"
                 }
+                aria-label={`${adminNav.label} (opens in new tab)`}
               >
                 {adminNav.label}
               </a>

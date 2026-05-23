@@ -29,6 +29,10 @@ export function scrollToPageSection(
   const el = findPageSection(sectionId);
   if (!el) return false;
 
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const resolvedBehavior =
+    behavior === "smooth" && prefersReducedMotion ? "auto" : behavior;
+
   // scroll-snap on <html> can pull the viewport to the wrong section after programmatic scroll
   const html = document.documentElement;
   const prevSnap = html.style.scrollSnapType;
@@ -39,11 +43,11 @@ export function scrollToPageSection(
   const top = el.getBoundingClientRect().top + window.scrollY - offset;
 
   html.style.scrollBehavior = "auto";
-  window.scrollTo({ top: Math.max(0, top), behavior });
+  window.scrollTo({ top: Math.max(0, top), behavior: resolvedBehavior });
   window.setTimeout(() => {
     html.style.scrollSnapType = prevSnap;
     html.style.scrollBehavior = "";
-  }, behavior === "smooth" ? 700 : 0);
+  }, resolvedBehavior === "smooth" ? 700 : 0);
 
   return true;
 }

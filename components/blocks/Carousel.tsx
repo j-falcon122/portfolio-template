@@ -54,9 +54,19 @@ export default function Carousel({
     if (!emblaApi) return;
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") emblaApi.scrollPrev();
-      else if (e.key === "ArrowRight") emblaApi.scrollNext();
-      else if (e.key === " ") setIsPlaying((p) => !p);
+      const root = rootRef.current;
+      if (!root || !root.contains(document.activeElement)) return;
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        emblaApi.scrollPrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        emblaApi.scrollNext();
+      } else if (e.key === " ") {
+        e.preventDefault();
+        setIsPlaying((p) => !p);
+      }
     };
 
     window.addEventListener("keydown", onKey);
@@ -100,9 +110,19 @@ export default function Carousel({
     emblaRef(el);
   };
 
+  const slideLabel =
+    items.length > 0 ? `Slide ${selectedIndex + 1} of ${items.length}` : "";
+
   return (
-    <div className={className}>
-      <div className="embla" ref={mergeRefs}>
+    <div
+      className={className}
+      aria-roledescription="carousel"
+      aria-label={items[selectedIndex]?.alt || "Media carousel"}
+    >
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {slideLabel}
+      </p>
+      <div className="embla" ref={mergeRefs} tabIndex={0}>
         <div className="embla__container">
           {items.map((item, idx) => {
             const keyStr =
@@ -140,6 +160,7 @@ export default function Carousel({
                       preload="metadata"
                       poster={item.poster?.src}
                       className="video-carousel__media"
+                      aria-label={item.alt || "Video"}
                     />
                   </div>
                 )}
@@ -177,13 +198,12 @@ export default function Carousel({
               </button>
             </div>
 
-            <div className="carousel-controls__dots" role="tablist" aria-label="Carousel slides">
+            <div className="carousel-controls__dots" role="group" aria-label="Choose slide">
               {items.map((_, i) => (
                 <button
                   key={i}
                   type="button"
-                  role="tab"
-                  aria-selected={i === selectedIndex}
+                  aria-current={i === selectedIndex ? "true" : undefined}
                   aria-label={`Go to slide ${i + 1}`}
                   onClick={() => emblaApi?.scrollTo(i)}
                   className={`carousel-controls__dot${i === selectedIndex ? " carousel-controls__dot--active" : ""}`}
