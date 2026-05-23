@@ -19,8 +19,8 @@ This project is intentionally designed around **composable content blocks** and 
 - **Reusable content blocks** (hero, gallery, text, video, CTA, about, contact—and carousel utilities where used)
 - **Shared layout** via `SiteHeader` / `SiteFooter` and App Router layouts
 - **Environment-aware behavior** (local vs QA vs production) via `SITE_ENV`, `VERCEL_ENV`, and `lib/deployEnv.ts`
-- **Deployment-ready** structure; **Vercel**-friendly (`vercel.json`, image domains for Sanity CDN)
-- **CI**: GitHub Actions for lint and content validation
+- **Deployment-ready** structure; **Vercel**-friendly (`vercel.json`, image domains for Sanity CDN) or **GitHub Pages** (static export workflow)
+- **CI**: GitHub Actions for lint, tests, content validation, and optional Pages deploy
 
 ---
 
@@ -205,6 +205,32 @@ Set in the hosting dashboard (Production + Preview):
 | `SITE_ENV` | `production` (preview: `qa`) |
 
 Do not set `SANITY_API_WRITE_TOKEN` on Vercel—use it locally only for `upload:videos` and `seed:sanity`.
+
+### GitHub Pages
+
+Static hosting via `.github/workflows/deploy-github-pages.yml` (runs on push to `main` and manual dispatch).
+
+1. In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. Merge to `main`; the workflow builds a static export and publishes `out/`.
+3. Project site URL: `https://<user>.github.io/<repo>/` (base path defaults to the repo name).
+
+**Repository variables** (optional):
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `CMS_PROVIDER` | `mock` | `mock` or `sanity` |
+| `NEXT_PUBLIC_BASE_PATH` | `/<repo>` | Set to empty for a custom domain at `/` |
+| `SANITY_DATASET` | `production` | Sanity dataset |
+| `ADMIN_NAV_URL` | — | Link for Admin nav to hosted Studio |
+
+**Secrets** (when using Sanity): `SANITY_PROJECT_ID`, `SANITY_API_READ_TOKEN`.
+
+Local static export preview:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/portfolio-template npm run build:pages
+npx serve out
+```
 
 ---
 
