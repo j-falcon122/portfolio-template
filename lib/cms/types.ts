@@ -1,17 +1,31 @@
 export type NavItem = { label: string; href: string };
 
+/** `single-page`: `/` stacks section blocks; nav uses in-page anchors (`/#slug`). Sub-routes redirect to anchors. */
+export type NavigationMode = "routes" | "single-page";
+
 export type SiteSettings = {
   title: string;
   nav: NavItem[];
   footerText?: string;
+  /** Defaults to `routes` when omitted (multi-page). */
+  navigationMode?: NavigationMode;
+  /**
+   * Order of `page` document slugs stacked on `/` when `navigationMode` is `single-page`.
+   * Each slug must match a published page. Omit or leave empty to use built-in defaults.
+   */
+  singlePageSectionSlugs?: string[];
 };
+
+export type HeroCta = { label: string; href: string };
 
 export type HeroBlock = {
   _type: "hero";
   brandTitle?: string;
   headline: string;
   subheadline?: string;
-  cta?: { label: string; href: string };
+  /** @deprecated Use `ctas` — kept for backward compatibility with older content. */
+  cta?: HeroCta;
+  ctas?: HeroCta[];
   backgroundImage?: { src: string; alt?: string };
 };
 
@@ -44,6 +58,20 @@ export type VideoBlock = {
   title?: string;
   embedUrl?: string;
   videoUrl?: string;
+};
+
+export type VideoCarouselItem = {
+  title?: string;
+  videoUrl?: string;
+  embedUrl?: string;
+  alt?: string;
+  poster?: { src: string; alt?: string };
+};
+
+export type VideoCarouselBlock = {
+  _type: "videoCarousel";
+  title?: string;
+  items: VideoCarouselItem[];
 };
 
 export type TextBlock = {
@@ -82,6 +110,7 @@ export type Block =
   | HeroBlock
   | GalleryBlock
   | VideoBlock
+  | VideoCarouselBlock
   | TextBlock
   | CtaBlock
   | AboutBlock

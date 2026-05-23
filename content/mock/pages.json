@@ -5,22 +5,23 @@
     "blocks": [
       {
         "_type": "hero",
-        "headline": "Create Something Great",
-        "subheadline": "A flexible portfolio template for creators",
-        "cta": {
-          "label": "View Work",
-          "href": "/work"
-        },
+        "brandTitle": "Portfolio Template",
+        "headline": "Content-driven sites, built to ship",
+        "subheadline": "A reusable Next.js foundation with pluggable CMS providers, composable blocks, and environment-aware deployment—ready for portfolios, studios, and client work.",
+        "ctas": [
+          {
+            "label": "View selected work",
+            "href": "/work"
+          },
+          {
+            "label": "Start a project",
+            "href": "/contact"
+          }
+        ],
         "backgroundImage": {
-          "src": "/placeholder-hero.svg",
-          "alt": "Background"
+          "src": "/vecteezy_colourful-hot-air-balloons-floating-in-the-blue-sky-during-a_47353614.jpg",
+          "alt": "Colourful hot air balloons floating in a blue sky"
         }
-        ,
-        "gallery": [
-          { "_type": "image", "src": "/placeholder-work-1.svg", "alt": "Hero slide 1" },
-          { "_type": "image", "src": "/placeholder-work-2.svg", "alt": "Hero slide 2" },
-          { "_type": "video", "videoUrl": "/placeholder-video.mp4", "poster": "/placeholder-work-3.svg", "alt": "Hero video" }
-        ]
       }
     ]
   },
@@ -29,10 +30,23 @@
     "title": "About",
     "blocks": [
       {
+        "_type": "about",
+        "title": "About the studio",
+        "body": "This template models how a small team ships marketing sites: structured content in a CMS, predictable blocks on the front end, and clear boundaries between reusable platform code and client-specific work. Fork it for a portfolio, agency site, or product landing page—then swap copy, imagery, and blocks without rewriting the stack.",
+        "image": {
+          "src": "/placeholder-work-6.svg",
+          "alt": "Team at work in a bright studio"
+        },
+        "stats": [
+          { "value": "12+", "label": "Block types" },
+          { "value": "2", "label": "CMS providers" },
+          { "value": "3", "label": "Deploy environments" }
+        ]
+      },
+      {
         "_type": "text",
-        "title": "About",
-  "body": "This section can be used to introduce yourself, your brand, or your work.",
-  "image": { "src": "/placeholder-work-6.svg", "alt": "About photo" }
+        "title": "How we work",
+        "body": "<p>Content is authored once—mock JSON locally, Sanity in shared environments—and rendered through the same block contract in every provider.</p><p>Pages stay thin: routes load CMS data, map slugs to sections, and let blocks handle layout. That keeps single-page scroll and multi-route modes aligned without duplicating markup.</p><ul><li>Define site settings, navigation, and section order in the CMS.</li><li>Compose each page from blocks instead of one-off components.</li><li>Promote improvements back to the template when they benefit every project.</li></ul>"
       }
     ]
   },
@@ -41,16 +55,66 @@
     "title": "Work",
     "blocks": [
       {
+        "_type": "text",
+        "title": "Selected work",
+        "body": "<p>Representative projects showing how galleries, motion, and calls to action compose into a case-study style work section. Replace placeholders with client deliverables, photography, or embedded demos.</p>"
+      },
+      {
         "_type": "gallery",
-        "title": "Selected Work",
+        "title": "Recent projects",
         "items": [
-          { "src": "/placeholder-work-1.svg", "alt": "Portfolio item 1" },
-          { "src": "/placeholder-work-2.svg", "alt": "Portfolio item 2" },
-          { "src": "/placeholder-work-3.svg", "alt": "Portfolio item 3" }
-          ,{ "src": "/placeholder-work-4.svg", "alt": "Portfolio item 4" }
-          ,{ "src": "/placeholder-work-5.svg", "alt": "Portfolio item 5" }
-          ,{ "src": "/placeholder-work-6.svg", "alt": "Portfolio item 6" }
+          {
+            "type": "image",
+            "src": "/placeholder-work-1.svg",
+            "alt": "Brand identity and marketing site for a creative studio"
+          },
+          {
+            "type": "image",
+            "src": "/placeholder-work-2.svg",
+            "alt": "E-commerce product detail and collection pages"
+          },
+          {
+            "type": "image",
+            "src": "/placeholder-work-3.svg",
+            "alt": "Editorial layout for a publication microsite"
+          },
+          {
+            "type": "image",
+            "src": "/placeholder-work-6.svg",
+            "alt": "Mobile-first landing page for a SaaS onboarding flow"
+          }
         ]
+      },
+      {
+        "_type": "videoCarousel",
+        "title": "Motion reel",
+        "items": [
+          {
+            "title": "Travel — train journey",
+            "videoUrl": "/vecteezy_young-woman-travelling-on-a-train-during-the-daytime-looking_31113935.mp4"
+          },
+          {
+            "title": "Lifestyle clip",
+            "videoUrl": "/video-from-rawpixel-id-26889016-sd.mp4",
+            "poster": {
+              "src": "/placeholder-work-4.svg",
+              "alt": "Poster frame for lifestyle clip"
+            }
+          },
+          {
+            "title": "Product motion",
+            "videoUrl": "/video-from-rawpixel-id-17154898-sd.mp4",
+            "poster": {
+              "src": "/placeholder-work-5.svg",
+              "alt": "Poster frame for product motion clip"
+            }
+          }
+        ]
+      },
+      {
+        "_type": "cta",
+        "label": "Start a project",
+        "href": "/contact"
       }
     ]
   },
@@ -59,9 +123,23 @@
     "title": "Contact",
     "blocks": [
       {
+        "_type": "contact",
+        "title": "Get in touch",
+        "subtitle": "Tell us about your timeline, scope, and CMS preferences. This form is a front-end placeholder—wire it to your email or CRM in a derived project.",
+        "email": "hello@example.com",
+        "phone": "+1 (555) 010-2000",
+        "location": "Remote · US Eastern",
+        "submitLabel": "Send message",
+        "socialLinks": [
+          { "label": "LinkedIn", "href": "https://www.linkedin.com" },
+          { "label": "GitHub", "href": "https://github.com" },
+          { "label": "Dribbble", "href": "https://dribbble.com" }
+        ]
+      },
+      {
         "_type": "text",
-        "title": "Contact",
-        "body": "Provide ways for people to reach you."
+        "title": "Availability",
+        "body": "<p>New engagements are typically booked four to six weeks out. For template questions or contributions, open an issue in the repository or reach out through the channels above.</p>"
       }
     ]
   }

@@ -1,5 +1,6 @@
 import site from "../../../content/mock/site.json";
 import pages from "../../../content/mock/pages.json";
+import { applyHostedVideoUrlsToPage } from "../hostedVideos";
 import type { CmsProvider, Page, SiteSettings } from "../types";
 
 const provider: CmsProvider = {
@@ -8,7 +9,8 @@ const provider: CmsProvider = {
   },
   async getPageBySlug(slug: string): Promise<Page | null> {
     const page = (pages as Page[]).find((p) => p.slug === slug);
-    return page || null;
+    if (!page) return null;
+    return applyHostedVideoUrlsToPage(page);
   }
 };
 

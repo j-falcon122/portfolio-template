@@ -10,7 +10,7 @@ export default function ContactBlock({
   submitLabel,
 }: ContactBlockType) {
   return (
-    <section className="contact-block" id="contact">
+    <section className="contact-block">
       <div className="contact-block__inner">
         {title ? (
           <h2 className="contact-block__title">{title}</h2>

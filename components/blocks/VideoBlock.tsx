@@ -1,28 +1,31 @@
 import type { VideoBlock as VideoBlockType } from "@/lib/cms/types";
+import { resolveEmbedUrl } from "@/lib/media/resolveEmbedUrl";
 
 export default function VideoBlock({ title, embedUrl, videoUrl }: VideoBlockType) {
-	return (
-		<section className="max-w-4xl mx-auto py-12">
-			{title ? <h2 className="mb-4 text-2xl font-semibold">{title}</h2> : null}
+  const embedSrc = embedUrl ? resolveEmbedUrl(embedUrl) : undefined;
 
-			{embedUrl ? (
-				<div className="aspect-video w-full">
-					<iframe
-						src={embedUrl}
-						title={title || "video"}
-						className="w-full h-full"
-						frameBorder={0}
-						allowFullScreen
-					/>
-				</div>
-			) : videoUrl ? (
-				<video controls className="w-full">
-					<source src={videoUrl} />
-					Your browser does not support the video tag.
-				</video>
-			) : (
-				<div className="text-sm text-neutral-500">No video available</div>
-			)}
-		</section>
-	);
+  return (
+    <section className="page-container py-12">
+      {title ? <h2 className="mb-4 text-2xl font-semibold">{title}</h2> : null}
+
+      {embedSrc ? (
+        <div className="aspect-video w-full overflow-hidden rounded-lg bg-neutral-100">
+          <iframe
+            src={embedSrc}
+            title={title || "Embedded video"}
+            className="h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      ) : videoUrl ? (
+        <video controls className="w-full rounded-lg" playsInline preload="metadata">
+          <source src={videoUrl} />
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <p className="text-sm text-neutral-500">No video available.</p>
+      )}
+    </section>
+  );
 }

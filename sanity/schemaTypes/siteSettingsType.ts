@@ -12,6 +12,34 @@ export const siteSettingsType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "navigationMode",
+      title: "Navigation layout",
+      type: "string",
+      options: {
+        list: [
+          {title: "Multi-page (each nav item is its own route)", value: "routes"},
+          {title: "Single page (home stacks sections; nav scrolls via #anchors)", value: "single-page"},
+        ],
+        layout: "radio",
+      },
+      initialValue: "routes",
+    }),
+    defineField({
+      name: "singlePageSectionSlugs",
+      title: "Single-page section order",
+      description:
+        "When using single-page navigation: page slugs to stack on the home URL, top to bottom. Must match published page documents (e.g. home, about, work). Leave empty to use the template default order.",
+      type: "array",
+      of: [{type: "string"}],
+      validation: (rule) =>
+        rule.custom<string[]>((slugs) => {
+          if (!slugs?.length) return true;
+          const bad = slugs.filter((s) => !s?.trim());
+          if (bad.length) return "Remove empty entries";
+          return true;
+        }),
+    }),
+    defineField({
       name: "nav",
       title: "Navigation",
       type: "array",

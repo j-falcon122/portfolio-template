@@ -8,7 +8,7 @@ export default function AboutBlock({
   stats = [],
 }: AboutBlockType) {
   return (
-    <section className="about-block" id="about">
+    <section className="about-block">
       <div className="about-block__inner">
         <div className="about-block__media">
           {image?.src ? (

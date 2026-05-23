@@ -4,6 +4,7 @@ import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useRef, useState } from "react";
 import type { GalleryItem } from "@/lib/cms/types";
+import { resolveEmbedUrl } from "@/lib/media/resolveEmbedUrl";
 
 export default function Carousel({
   items = [],
@@ -23,7 +24,20 @@ export default function Carousel({
   useEffect(() => {
     if (!emblaApi) return;
 
-    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    const pauseInactiveVideos = () => {
+      const root = rootRef.current;
+      if (!root) return;
+      const idx = emblaApi.selectedScrollSnap();
+      root.querySelectorAll(".embla__slide").forEach((slide, i) => {
+        const video = slide.querySelector("video");
+        if (video && i !== idx) video.pause();
+      });
+    };
+
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+      pauseInactiveVideos();
+    };
     emblaApi.on("select", onSelect);
     onSelect();
 
@@ -107,21 +121,27 @@ export default function Carousel({
                     className="h-auto w-full object-cover"
                   />
                 ) : item.embedUrl ? (
-                  <iframe
-                    src={item.embedUrl}
-                    title={item.alt || "Video"}
-                    className="h-full w-full"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+                  <div className="video-carousel__frame">
+                    <iframe
+                      src={resolveEmbedUrl(item.embedUrl)}
+                      title={item.alt || "Video"}
+                      className="video-carousel__media"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
                 ) : (
-                  <video
-                    src={item.videoUrl ?? item.src}
-                    controls
-                    poster={item.poster?.src}
-                    className="h-auto w-full"
-                  />
+                  <div className="video-carousel__frame">
+                    <video
+                      src={item.videoUrl ?? item.src}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      poster={item.poster?.src}
+                      className="video-carousel__media"
+                    />
+                  </div>
                 )}
               </div>
             );
@@ -129,36 +149,44 @@ export default function Carousel({
         </div>
       </div>
 
+      {items[selectedIndex]?.alt ? (
+        <p className="video-carousel__caption mt-3 text-center text-sm text-neutral-600">
+          {items[selectedIndex]?.alt}
+        </p>
+      ) : null}
+
       {items.length > 1 && showControls ? (
-        <div className="carousel-controls mt-4">
-          <div className="controls-inner flex w-full items-center justify-between">
-            <div className="flex items-center gap-2">
+        <div className="carousel-controls mt-5">
+          <div className="carousel-controls__inner">
+            <div className="carousel-controls__actions">
               <button
                 type="button"
                 onClick={() => emblaApi?.scrollPrev()}
-                className="pointer-events-auto rounded bg-white px-3 py-2"
+                className="carousel-controls__btn carousel-controls__btn--nav"
+                aria-label="Previous slide"
               >
                 Prev
               </button>
               <button
                 type="button"
                 onClick={() => setIsPlaying((p) => !p)}
-                className="pointer-events-auto rounded bg-white px-3 py-2"
+                className="carousel-controls__btn carousel-controls__btn--play"
+                aria-label={isPlaying ? "Pause autoplay" : "Start autoplay"}
               >
                 {isPlaying ? "Pause" : "Play"}
               </button>
             </div>
 
-            <div className="flex gap-2">
+            <div className="carousel-controls__dots" role="tablist" aria-label="Carousel slides">
               {items.map((_, i) => (
                 <button
                   key={i}
                   type="button"
-                  onClick={() => emblaApi?.scrollTo(i)}
-                  className={`h-2 w-2 rounded-full pointer-events-auto ${
-                    i === selectedIndex ? "bg-black" : "bg-white/60"
-                  }`}
+                  role="tab"
+                  aria-selected={i === selectedIndex}
                   aria-label={`Go to slide ${i + 1}`}
+                  onClick={() => emblaApi?.scrollTo(i)}
+                  className={`carousel-controls__dot${i === selectedIndex ? " carousel-controls__dot--active" : ""}`}
                 />
               ))}
             </div>
@@ -166,7 +194,8 @@ export default function Carousel({
             <button
               type="button"
               onClick={() => emblaApi?.scrollNext()}
-              className="pointer-events-auto rounded bg-white px-3 py-2"
+              className="carousel-controls__btn carousel-controls__btn--nav"
+              aria-label="Next slide"
             >
               Next
             </button>

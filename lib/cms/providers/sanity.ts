@@ -1,4 +1,5 @@
 import { createClient, type SanityClient } from "@sanity/client";
+import { normalizePageSlug } from "@/lib/normalizePageSlug";
 import type {
   AboutBlock,
   Block,
@@ -7,20 +8,23 @@ import type {
   GalleryBlock,
   HeroBlock,
   NavItem,
+  NavigationMode,
   Page,
   SiteSettings,
   TextBlock,
   VideoBlock,
+  VideoCarouselBlock,
+  VideoCarouselItem,
 } from "../types";
 
 /**
  * Expected Sanity document types (create matching schemas in your Studio):
  *
- * - `siteSettings` (singleton): { title, nav: [{label, href}], footerText }
+ * - `siteSettings` (singleton): { title, navigationMode?, singlePageSectionSlugs?, nav: [{label, href}], footerText }
  * - `page`: { slug (slug type or string), title, blocks: [...] }
  *
  * Block objects use `_type` matching Block union:
- * hero | gallery | video | text | cta | about | contact.
+ * hero | gallery | video | videoCarousel | text | cta | about | contact.
  * Images: use Sanity image fields; asset refs are resolved to `{ src, alt }` via GROQ.
  */
 
@@ -49,14 +53,20 @@ function createSanityClient(): SanityClient {
   });
 }
 
-const SITE_SETTINGS_GROQ = `*[_type == "siteSettings"][0]{
+const SITE_SETTINGS_GROQ = `coalesce(
+  *[_type == "siteSettings" && _id == "siteSettings"][0],
+  *[_type == "siteSettings"][0]
+){
   title,
+  navigationMode,
+  singlePageSectionSlugs,
   nav[]{ label, href },
   footerText
 }`;
 
 function pageGroq(slug: string): string {
-  const normalized = (slug || "").trim();
+  const normalized = normalizePageSlug(slug);
+  const docId = JSON.stringify(`page-${normalized}`);
   const candidates = new Set<string>([normalized]);
   if (normalized === "home") {
     candidates.add("/");
@@ -73,7 +83,10 @@ function pageGroq(slug: string): string {
       return `(slug.current == ${safe} || slug == ${safe})`;
     })
     .join(" || ");
-  return `*[_type == "page" && (${slugFilter})][0]{
+  return `coalesce(
+    *[_type == "page" && _id == ${docId}][0],
+    *[_type == "page" && (${slugFilter})][0]
+  ){
     "slug": coalesce(slug.current, slug),
     title,
     blocks[]{
@@ -83,6 +96,7 @@ function pageGroq(slug: string): string {
       headline,
       subheadline,
       cta,
+      ctas[]{label, href},
       title,
       body,
       label,
@@ -93,14 +107,15 @@ function pageGroq(slug: string): string {
       location,
       submitLabel,
       embedUrl,
-      videoUrl,
+      "videoUrl": coalesce(videoUrl, videoFile.asset->url),
       socialLinks[]{label, href},
       stats[]{value, label},
       items[]{
         _type,
-        videoUrl,
+        title,
         embedUrl,
-        "src": coalesce(asset->url, src),
+        "videoUrl": coalesce(videoUrl, videoFile.asset->url),
+        "src": coalesce(videoFile.asset->url, asset->url, src),
         "alt": coalesce(alt, asset->altText)
         ,
         poster{
@@ -124,6 +139,20 @@ function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
 }
 
+function normalizeNavigationMode(raw: unknown): NavigationMode | undefined {
+  if (raw === "routes" || raw === "single-page") return raw;
+  return undefined;
+}
+
+function normalizeSinglePageSectionSlugs(raw: unknown): string[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const out = raw
+    .filter((x): x is string => typeof x === "string")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return out.length ? out : undefined;
+}
+
 function normalizeNav(items: unknown): NavItem[] {
   if (!Array.isArray(items)) return [];
   const out: NavItem[] = [];
@@ -136,6 +165,31 @@ function normalizeNav(items: unknown): NavItem[] {
   return out;
 }
 
+function normalizeHeroCtas(raw: Record<string, unknown>): HeroBlock["ctas"] {
+  const out: NonNullable<HeroBlock["ctas"]> = [];
+
+  const ctasRaw = raw.ctas;
+  if (Array.isArray(ctasRaw)) {
+    for (const row of ctasRaw) {
+      if (!isRecord(row)) continue;
+      const label = typeof row.label === "string" ? row.label.trim() : "";
+      const href = typeof row.href === "string" ? row.href.trim() : "";
+      if (label && href) out.push({ label, href });
+    }
+  }
+
+  if (out.length) return out;
+
+  const ctaRaw = raw.cta;
+  if (isRecord(ctaRaw)) {
+    const label = typeof ctaRaw.label === "string" ? ctaRaw.label.trim() : "";
+    const href = typeof ctaRaw.href === "string" ? ctaRaw.href.trim() : "";
+    if (label && href) return [{ label, href }];
+  }
+
+  return undefined;
+}
+
 function normalizeHero(raw: Record<string, unknown>): HeroBlock {
   const bg = raw.backgroundImage;
   let backgroundImage: HeroBlock["backgroundImage"];
@@ -145,13 +199,7 @@ function normalizeHero(raw: Record<string, unknown>): HeroBlock {
       ...(typeof bg.alt === "string" ? { alt: bg.alt } : {}),
     };
   }
-  const ctaRaw = raw.cta;
-  let cta: HeroBlock["cta"];
-  if (isRecord(ctaRaw)) {
-    const label = typeof ctaRaw.label === "string" ? ctaRaw.label : "";
-    const href = typeof ctaRaw.href === "string" ? ctaRaw.href : "";
-    if (label || href) cta = { label, href };
-  }
+  const ctas = normalizeHeroCtas(raw);
   return {
     _type: "hero",
     ...(typeof raw.brandTitle === "string"
@@ -162,7 +210,7 @@ function normalizeHero(raw: Record<string, unknown>): HeroBlock {
     ...(typeof raw.subheadline === "string"
       ? { subheadline: raw.subheadline }
       : {}),
-    ...(cta ? { cta } : {}),
+    ...(ctas?.length ? { ctas } : {}),
     ...(backgroundImage ? { backgroundImage } : {}),
   };
 }
@@ -227,6 +275,54 @@ function normalizeVideo(raw: Record<string, unknown>): VideoBlock {
     ...(typeof raw.videoUrl === "string"
       ? { videoUrl: raw.videoUrl }
       : {}),
+  };
+}
+
+function normalizeCarouselVideoItem(
+  it: Record<string, unknown>
+): VideoCarouselItem | null {
+  const embedUrl =
+    typeof it.embedUrl === "string" ? it.embedUrl.trim() : undefined;
+  const videoUrl =
+    typeof it.videoUrl === "string" ? it.videoUrl.trim() : undefined;
+  const src = typeof it.src === "string" ? it.src.trim() : undefined;
+  const resolvedUrl = videoUrl || src;
+  if (!resolvedUrl && !embedUrl) return null;
+
+  const posterRaw = it.poster;
+  const poster =
+    isRecord(posterRaw) && typeof posterRaw.src === "string"
+      ? {
+          src: posterRaw.src,
+          ...(typeof posterRaw.alt === "string" ? { alt: posterRaw.alt } : {}),
+        }
+      : undefined;
+
+  return {
+    ...(typeof it.title === "string" ? { title: it.title } : {}),
+    ...(typeof it.alt === "string" ? { alt: it.alt } : {}),
+    ...(embedUrl ? { embedUrl } : {}),
+    ...(resolvedUrl ? { videoUrl: resolvedUrl } : {}),
+    ...(poster ? { poster } : {}),
+  };
+}
+
+function normalizeVideoCarousel(
+  raw: Record<string, unknown>
+): VideoCarouselBlock {
+  const itemsRaw = raw.items;
+  const items: VideoCarouselItem[] = [];
+  if (Array.isArray(itemsRaw)) {
+    for (const it of itemsRaw) {
+      if (!isRecord(it)) continue;
+      const row = normalizeCarouselVideoItem(it);
+      if (row) items.push(row);
+    }
+  }
+  return {
+    _type: "videoCarousel",
+    ...(typeof raw.title === "string" ? { title: raw.title } : {}),
+    items,
   };
 }
 
@@ -312,6 +408,8 @@ function normalizeBlock(raw: unknown): Block | null {
       return normalizeGallery(raw);
     case "video":
       return normalizeVideo(raw);
+    case "videoCarousel":
+      return normalizeVideoCarousel(raw);
     case "text":
     case "textBlock":
       return normalizeText(raw);
@@ -332,7 +430,9 @@ function normalizeBlock(raw: unknown): Block | null {
 
 function normalizePage(raw: unknown): Page | null {
   if (!isRecord(raw)) return null;
-  const slug = typeof raw.slug === "string" ? raw.slug : "";
+  const slug = normalizePageSlug(
+    typeof raw.slug === "string" ? raw.slug : ""
+  );
   if (!slug) return null;
   const blocksRaw = raw.blocks;
   const blocks: Block[] = [];
@@ -381,9 +481,21 @@ const provider: CmsProvider = {
     }
     const title =
       typeof data.title === "string" ? data.title : "Site";
+    let navigationMode = normalizeNavigationMode(data.navigationMode);
+    const singlePageSectionSlugs = normalizeSinglePageSectionSlugs(
+      data.singlePageSectionSlugs
+    );
+    // Editors may add section order before toggling the radio; treat as single-page when slugs are set.
+    if (!navigationMode && singlePageSectionSlugs?.length) {
+      navigationMode = "single-page";
+    }
     return {
       title,
       nav: normalizeNav(data.nav),
+      ...(navigationMode ? { navigationMode } : {}),
+      ...(singlePageSectionSlugs?.length
+        ? { singlePageSectionSlugs }
+        : {}),
       ...(typeof data.footerText === "string"
         ? { footerText: data.footerText }
         : {}),

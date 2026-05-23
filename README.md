@@ -183,11 +183,28 @@ bash scripts/init-template.sh --install
 
 ## Sanity setup checklist
 
-- `.env.local`: `CMS_PROVIDER=sanity`, `SANITY_PROJECT_ID`, `SANITY_DATASET`, and token as needed.
-- `npm run sanity:dev`
-- Create a `siteSettings` document.
-- Create `page` documents with slugs such as `home`, `about`, `work`, `contact`.
-- Publish and refresh the Next.js app.
+- `.env.local`: `CMS_PROVIDER=sanity`, `SANITY_PROJECT_ID`, `SANITY_DATASET`, and tokens as needed (see `.env.example`).
+- `npm run sanity:dev` — local Studio, or use a deployed Studio URL for QA/production (`ADMIN_NAV_URL`).
+- **Videos on CDN:** `npm run upload:videos` (writes `content/hosted-videos.json` from MP4s in `public/`).
+- **Seed pages from mock:** `npm run seed:sanity` — creates `siteSettings` + `page` documents (`home`, `about`, `work`, `contact`) with gallery images and HTTPS video URLs. Re-run after editing `content/mock/pages.json`. Seed one page: `npm run seed:sanity -- --only work`.
+- Open Studio → confirm documents → **Publish** if your dataset uses drafts.
+- Restart `npm run dev` and load `/` or `/#work`.
+
+### Production (e.g. Vercel)
+
+Set in the hosting dashboard (Production + Preview):
+
+| Variable | Production example |
+|----------|-------------------|
+| `CMS_PROVIDER` | `sanity` |
+| `SANITY_PROJECT_ID` | your project id |
+| `SANITY_DATASET` | `production` (preview: `staging` if you use it) |
+| `SANITY_API_READ_TOKEN` | optional; required for private datasets |
+| `SANITY_USE_CDN` | `true` |
+| `ADMIN_NAV_URL` | `https://your-studio.sanity.studio` |
+| `SITE_ENV` | `production` (preview: `qa`) |
+
+Do not set `SANITY_API_WRITE_TOKEN` on Vercel—use it locally only for `upload:videos` and `seed:sanity`.
 
 ---
 

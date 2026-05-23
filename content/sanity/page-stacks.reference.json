@@ -1,0 +1,29 @@
+{
+  "_comment": "Mirror these page documents in Sanity Studio (slug + blocks). Mock provider uses content/mock/pages.json; field names match Studio block types (textBlock in Studio maps to _type text in the app).",
+  "pages": [
+    {
+      "slug": "home",
+      "title": "Home",
+      "blocks": ["hero"]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "blocks": ["about", "textBlock"]
+    },
+    {
+      "slug": "work",
+      "title": "Work",
+      "blocks": ["textBlock", "gallery", "video", "video", "video", "cta"]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "blocks": ["contact", "textBlock"]
+    }
+  ],
+  "siteSettings": {
+    "navigationMode": "single-page",
+    "singlePageSectionSlugs": ["home", "about", "work", "contact"]
+  }
+}

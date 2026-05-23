@@ -7,8 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "validate:content": "node ./scripts/validate-json-ci.mjs",
     "test:sanity": "node --env-file=.env.local scripts/test-sanity.mjs",
+    "upload:videos": "node --env-file=.env.local scripts/upload-videos-to-sanity.mjs",
+    "seed:sanity": "node --env-file=.env.local scripts/seed-sanity-from-mock.mjs",
+    "migrate:hero-ctas": "node --env-file=.env.local scripts/migrate-hero-cta-to-ctas.mjs",
+    "cleanup:sanity-pages": "node --env-file=.env.local scripts/cleanup-sanity-duplicate-pages.mjs",
     "sanity:dev": "sanity dev",
     "sanity:dev:polling": "CHOKIDAR_USEPOLLING=1 sanity dev",
     "sanity:deploy": "sanity deploy"
@@ -34,7 +40,8 @@
     "eslint": "^9",
     "eslint-config-next": "^16.2.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.7"
   },
   "keywords": [
     "nextjs",

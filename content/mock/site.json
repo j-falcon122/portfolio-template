@@ -1,5 +1,7 @@
 {
   "title": "Portfolio Template",
+  "navigationMode": "single-page",
+  "singlePageSectionSlugs": ["home", "about", "work", "contact"],
   "nav": [
     { "label": "Home", "href": "/" },
     { "label": "About", "href": "/about" },
