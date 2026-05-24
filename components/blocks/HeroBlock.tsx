@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { HeroBlock as HeroBlockType } from "@/lib/cms/types";
+import { withAssetPath } from "@/lib/basePath";
 import { getCms } from "@/lib/cms";
 import SinglePageNavLink from "@/components/SinglePageNavLink";
 
@@ -24,7 +25,7 @@ export default async function HeroBlock({
       {backgroundImage?.src ? (
         <>
           <Image
-            src={backgroundImage.src}
+            src={withAssetPath(backgroundImage.src)}
             alt={backgroundImage.alt || ""}
             fill
             priority

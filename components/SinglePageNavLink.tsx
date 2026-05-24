@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { NavigationMode } from "@/lib/cms/types";
+import { withBasePath } from "@/lib/basePath";
 import { resolveNavHref } from "@/lib/resolveNavHref";
 import { scrollToPageSectionWhenReady } from "@/lib/scrollToPageSection";
 
@@ -25,14 +26,15 @@ export default function SinglePageNavLink({
   const onHome = pathname === "/";
 
   if (singlePage && onHome && resolved.startsWith("/#")) {
+    const anchorHref = withBasePath(resolved);
     return (
       <a
-        href={resolved}
+        href={anchorHref}
         className={className}
         onClick={(e) => {
           e.preventDefault();
           const sectionId = resolved.slice(2);
-          window.history.pushState(null, "", resolved);
+          window.history.pushState(null, "", anchorHref);
           scrollToPageSectionWhenReady(sectionId);
         }}
       >

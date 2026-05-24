@@ -4,6 +4,7 @@ import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useRef, useState } from "react";
 import type { GalleryItem } from "@/lib/cms/types";
+import { withAssetPath } from "@/lib/basePath";
 import { resolveEmbedUrl } from "@/lib/media/resolveEmbedUrl";
 
 export default function Carousel({
@@ -134,7 +135,7 @@ export default function Carousel({
               <div key={keyStr} className="embla__slide">
                 {item.type === "image" ? (
                   <Image
-                    src={item.src}
+                    src={withAssetPath(item.src)}
                     alt={item.alt || ""}
                     width={1600}
                     height={900}
@@ -154,11 +155,11 @@ export default function Carousel({
                 ) : (
                   <div className="video-carousel__frame">
                     <video
-                      src={item.videoUrl ?? item.src}
+                      src={withAssetPath(item.videoUrl ?? item.src)}
                       controls
                       playsInline
                       preload="metadata"
-                      poster={item.poster?.src}
+                      poster={item.poster?.src ? withAssetPath(item.poster.src) : undefined}
                       className="video-carousel__media"
                       aria-label={item.alt || "Video"}
                     />
