@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { withAssetPath } from "@/lib/basePath";
 import type { GalleryBlock as GalleryBlockType } from "@/lib/cms/types";
 
 export default function GalleryBlock({ title, items = [] }: GalleryBlockType) {
@@ -22,8 +23,8 @@ export default function GalleryBlock({ title, items = [] }: GalleryBlockType) {
                 className="gallery__item relative aspect-[4/5] overflow-hidden rounded-lg shadow-lg"
               >
                 <video
-                  src={item.src}
-                  poster={item.poster?.src}
+                  src={withAssetPath(item.src)}
+                  poster={item.poster?.src ? withAssetPath(item.poster.src) : undefined}
                   aria-label={item.alt || "Gallery video"}
                   className="gallery__img"
                   controls
@@ -46,7 +47,7 @@ export default function GalleryBlock({ title, items = [] }: GalleryBlockType) {
               aria-label={item.alt || `View gallery item ${idx + 1}`}
             >
               <Image
-                src={item.src}
+                src={withAssetPath(item.src)}
                 alt={item.alt || ""}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"

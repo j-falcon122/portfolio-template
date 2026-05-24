@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { withAssetPath } from "@/lib/basePath";
 
 export const DEFAULT_SITE_LOGO_SRC = "/jf_logo_transparent.png";
 
@@ -25,7 +26,7 @@ export default function SiteBrand({
     <span className={`site-brand inline-flex items-center gap-2.5 ${className}`.trim()}>
       {logoSrc ? (
         <Image
-          src={logoSrc}
+          src={withAssetPath(logoSrc)}
           alt={alt}
           width={36}
           height={24}

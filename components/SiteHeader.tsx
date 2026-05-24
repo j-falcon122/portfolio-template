@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore, type MouseEvent as ReactMouseEvent } from "react";
 import type { SiteSettings } from "@/lib/cms/types";
+import { withBasePath } from "@/lib/basePath";
 import { resolveNavHref } from "@/lib/resolveNavHref";
 import { scrollToPageSectionWhenReady } from "@/lib/scrollToPageSection";
 import SiteBrand from "@/components/SiteBrand";
@@ -77,18 +78,20 @@ export default function SiteHeader({
 
   function handleSinglePageNavClick(
     e: ReactMouseEvent<HTMLAnchorElement>,
-    resolvedHref: string
+    href: string
   ) {
-    if (!singlePage || !resolvedHref.startsWith("/#")) return;
+    const hashMatch = href.match(/#([^/?#]+)$/);
+    if (!singlePage || !hashMatch) return;
     e.preventDefault();
-    const sectionId = resolvedHref.slice(2);
+    const sectionId = hashMatch[1];
+    const targetHref = withBasePath(`/#${sectionId}`);
 
     if (!isHome) {
-      window.location.assign(resolvedHref);
+      window.location.assign(targetHref);
       return;
     }
 
-    window.history.pushState(null, "", resolvedHref);
+    window.history.pushState(null, "", targetHref);
     window.dispatchEvent(new HashChangeEvent("hashchange"));
     scrollToPageSectionWhenReady(sectionId);
   }
@@ -151,14 +154,17 @@ export default function SiteHeader({
             const ariaCurrent = navAriaCurrent(item.href, active);
             // Next.js <Link> often skips native fragment scroll on `/`. Use <a> for same-page hashes.
             const useNativeAnchor = resolvedHref.startsWith("/#");
+            const anchorHref = useNativeAnchor
+              ? withBasePath(resolvedHref)
+              : resolvedHref;
             if (useNativeAnchor) {
               return (
                 <a
                   key={`${item.href}-${resolvedHref}`}
-                  href={resolvedHref}
+                  href={anchorHref}
                   className={className}
                   aria-current={ariaCurrent}
-                  onClick={(e) => handleSinglePageNavClick(e, resolvedHref)}
+                  onClick={(e) => handleSinglePageNavClick(e, anchorHref)}
                 >
                   {item.label}
                 </a>

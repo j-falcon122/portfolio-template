@@ -1,4 +1,5 @@
 import type { VideoBlock as VideoBlockType } from "@/lib/cms/types";
+import { withAssetPath } from "@/lib/basePath";
 import { resolveEmbedUrl } from "@/lib/media/resolveEmbedUrl";
 
 export default function VideoBlock({ title, embedUrl, videoUrl }: VideoBlockType) {
@@ -26,7 +27,7 @@ export default function VideoBlock({ title, embedUrl, videoUrl }: VideoBlockType
           preload="metadata"
           aria-label={title || "Video"}
         >
-          <source src={videoUrl} />
+          <source src={withAssetPath(videoUrl)} />
           Your browser does not support the video tag.
         </video>
       ) : (

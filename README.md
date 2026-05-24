@@ -225,6 +225,8 @@ Static hosting via `.github/workflows/deploy-github-pages.yml` (runs on push to 
 
 **Secrets** (when using Sanity): `SANITY_PROJECT_ID`, `SANITY_API_READ_TOKEN`.
 
+**Admin nav:** Shows **Admin** → `/admin` with Studio setup notes. To open hosted Sanity Studio directly from the header, set repository variable `ADMIN_NAV_URL` to your `*.sanity.studio` URL and redeploy.
+
 Local static export preview:
 
 ```bash

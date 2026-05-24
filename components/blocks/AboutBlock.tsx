@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { AboutBlock as AboutBlockType } from "@/lib/cms/types";
+import { withAssetPath } from "@/lib/basePath";
 
 export default function AboutBlock({
   title,
@@ -13,7 +14,7 @@ export default function AboutBlock({
         <div className="about-block__media">
           {image?.src ? (
             <Image
-              src={image.src}
+              src={withAssetPath(image.src)}
               alt={image.alt || "About image"}
               width={1000}
               height={1200}
