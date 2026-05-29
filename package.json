@@ -18,8 +18,8 @@
     "seed:sanity": "node --env-file=.env.local scripts/seed-sanity-from-mock.mjs",
     "migrate:hero-ctas": "node --env-file=.env.local scripts/migrate-hero-cta-to-ctas.mjs",
     "cleanup:sanity-pages": "node --env-file=.env.local scripts/cleanup-sanity-duplicate-pages.mjs",
-    "sanity:dev": "sanity dev",
-    "sanity:dev:polling": "CHOKIDAR_USEPOLLING=1 sanity dev",
+    "sanity:dev": "node --env-file=.env.local node_modules/.bin/sanity dev",
+    "sanity:dev:polling": "CHOKIDAR_USEPOLLING=1 node --env-file=.env.local node_modules/.bin/sanity dev",
     "sanity:deploy": "sanity deploy"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "next-auth": "^4.24.13",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "resend": "^6.12.4",
     "sanity": "^5.22.0",
     "styled-components": "^6.4.1"
   },

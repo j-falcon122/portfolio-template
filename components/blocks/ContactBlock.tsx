@@ -1,10 +1,5 @@
 import type { ContactBlock as ContactBlockType } from "@/lib/cms/types";
-
-const fieldIds = {
-  name: "contact-name",
-  email: "contact-email",
-  message: "contact-message",
-} as const;
+import ContactForm from "./ContactForm";
 
 export default function ContactBlock({
   title,
@@ -73,46 +68,7 @@ export default function ContactBlock({
             ) : null}
           </div>
 
-          <form className="contact-block__form" noValidate>
-            <div className="contact-block__field">
-              <label className="contact-block__label" htmlFor={fieldIds.name}>
-                Name
-              </label>
-              <input
-                id={fieldIds.name}
-                name="name"
-                type="text"
-                autoComplete="name"
-                className="contact-block__input"
-              />
-            </div>
-            <div className="contact-block__field">
-              <label className="contact-block__label" htmlFor={fieldIds.email}>
-                Email
-              </label>
-              <input
-                id={fieldIds.email}
-                name="email"
-                type="email"
-                autoComplete="email"
-                className="contact-block__input"
-              />
-            </div>
-            <div className="contact-block__field">
-              <label className="contact-block__label" htmlFor={fieldIds.message}>
-                Message
-              </label>
-              <textarea
-                id={fieldIds.message}
-                name="message"
-                rows={5}
-                className="contact-block__textarea"
-              />
-            </div>
-            <button type="submit" className="contact-block__button">
-              {submitLabel || "Send Message"}
-            </button>
-          </form>
+          <ContactForm submitLabel={submitLabel} />
         </div>
       </div>
     </section>
