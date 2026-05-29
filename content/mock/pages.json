@@ -6,115 +6,145 @@
       {
         "_type": "hero",
         "brandTitle": "Portfolio Template",
-        "headline": "Content-driven sites, built to ship",
-        "subheadline": "A reusable Next.js foundation with pluggable CMS providers, composable blocks, and environment-aware deployment—ready for portfolios, studios, and client work.",
+        "headline": "Hero Block",
+        "subheadline": "Full-width intro with optional background image, brand title, headline, subheadline, and multiple call-to-action buttons. Ideal for landing pages, campaign headers, and above-the-fold storytelling.",
         "ctas": [
-          {
-            "label": "View selected work",
-            "href": "/work"
-          },
-          {
-            "label": "Start a project",
-            "href": "/contact"
-          }
+          { "label": "See content blocks", "href": "/about" },
+          { "label": "See media blocks", "href": "/work" }
         ],
         "backgroundImage": {
           "src": "/vecteezy_colourful-hot-air-balloons-floating-in-the-blue-sky-during-a_47353614.jpg",
-          "alt": "Colourful hot air balloons floating in a blue sky"
+          "alt": "Colourful hot air balloons — sample hero background"
         }
+      },
+      {
+        "_type": "text",
+        "title": "Built for client demos",
+        "body": "<p>This site is a <strong>living component library</strong>. Each section below maps to a CMS block your team can mix, reorder, and publish without touching code.</p><p>Scroll through <em>Content</em>, <em>Media</em>, and <em>Contact</em> to preview every block type included in the template — then swap copy, imagery, and video for your next project.</p>"
+      },
+      {
+        "_type": "text",
+        "title": "What's included",
+        "body": "<p><strong>8 composable blocks</strong> — Hero, About, Text, Gallery, Video, Video Carousel, CTA, and Contact.</p><p><strong>2 CMS modes</strong> — local mock JSON for fast iteration, or Sanity for shared authoring and production deploys.</p><p><strong>Environment-aware</strong> — single-page or multi-route navigation, GitHub Pages static export, and hosted Sanity Studio.</p><p>Fork this template for your next client site, replace the demo copy, and ship.</p>"
       }
     ]
   },
   {
     "slug": "about",
-    "title": "About",
+    "title": "Content",
     "blocks": [
       {
+        "_type": "text",
+        "title": "Content blocks",
+        "body": "<p>These blocks handle narrative and profile content — perfect for about pages, service descriptions, and editorial sections.</p>"
+      },
+      {
         "_type": "about",
-        "title": "About the studio",
-        "body": "This template models how a small team ships marketing sites: structured content in a CMS, predictable blocks on the front end, and clear boundaries between reusable platform code and client-specific work. Fork it for a portfolio, agency site, or product landing page—then swap copy, imagery, and blocks without rewriting the stack.",
+        "title": "About Block",
+        "body": "Side-by-side layout with title, body copy, optional portrait or team photo, and a row of stat highlights. Use it for studio bios, founder stories, or capability summaries.",
         "image": {
           "src": "/placeholder-work-6.svg",
-          "alt": "Team at work in a bright studio"
+          "alt": "Sample portrait for the About block"
         },
         "stats": [
-          { "value": "12+", "label": "Block types" },
+          { "value": "8", "label": "Block types" },
           { "value": "2", "label": "CMS providers" },
-          { "value": "3", "label": "Deploy environments" }
+          { "value": "1", "label": "Content model" }
         ]
       },
       {
         "_type": "text",
-        "title": "How we work",
-        "body": "<p>Content is authored once—mock JSON locally, Sanity in shared environments—and rendered through the same block contract in every provider.</p><p>Pages stay thin: routes load CMS data, map slugs to sections, and let blocks handle layout. That keeps single-page scroll and multi-route modes aligned without duplicating markup.</p><ul><li>Define site settings, navigation, and section order in the CMS.</li><li>Compose each page from blocks instead of one-off components.</li><li>Promote improvements back to the template when they benefit every project.</li></ul>"
+        "title": "Text Block",
+        "body": "<p>Flexible rich-text section for long-form copy, lists, and inline formatting. Authors write in the CMS; the front end renders semantic HTML.</p><ul><li>Section titles and body copy</li><li>Supports paragraphs, emphasis, and lists</li><li>Stacks cleanly between visual blocks</li></ul><p>Pair it with Hero, About, or Contact blocks to build complete pages from structured content alone.</p>"
       }
     ]
   },
   {
     "slug": "work",
-    "title": "Work",
+    "title": "Media",
     "blocks": [
       {
         "_type": "text",
-        "title": "Selected work",
-        "body": "<p>Representative projects showing how galleries, motion, and calls to action compose into a case-study style work section. Replace placeholders with client deliverables, photography, or embedded demos.</p>"
+        "title": "Media blocks",
+        "body": "<p>Image grids, hosted video, embeds, and carousels — everything you need for portfolios, case studies, and motion reels.</p>"
       },
       {
         "_type": "gallery",
-        "title": "Recent projects",
+        "title": "Gallery Block",
         "items": [
           {
             "type": "image",
             "src": "/placeholder-work-1.svg",
-            "alt": "Brand identity and marketing site for a creative studio"
+            "alt": "Gallery image — selectable grid tile with hover state"
           },
           {
             "type": "image",
             "src": "/placeholder-work-2.svg",
-            "alt": "E-commerce product detail and collection pages"
+            "alt": "Gallery image — responsive three-column layout"
           },
           {
             "type": "image",
             "src": "/placeholder-work-3.svg",
-            "alt": "Editorial layout for a publication microsite"
+            "alt": "Gallery image — case study or project thumbnail"
           },
           {
-            "type": "image",
-            "src": "/placeholder-work-6.svg",
-            "alt": "Mobile-first landing page for a SaaS onboarding flow"
+            "type": "video",
+            "src": "/vecteezy_young-woman-travelling-on-a-train-during-the-daytime-looking_31113935.mp4",
+            "alt": "Gallery video — inline MP4 from Sanity CDN or hosted URL"
           }
         ]
+      },
+      {
+        "_type": "video",
+        "title": "Video Block",
+        "embedUrl": "https://www.youtube.com/watch?v=LXb3EKWsInQ",
+        "videoUrl": "/placeholder-video.mp4"
+      },
+      {
+        "_type": "text",
+        "title": "Video Block — embed or hosted",
+        "body": "<p>The Video block supports <strong>YouTube/Vimeo embeds</strong> (shown above) or a <strong>hosted MP4</strong> URL from Sanity CDN. Authors pick one source in the CMS; the site renders the appropriate player.</p>"
       },
       {
         "_type": "videoCarousel",
-        "title": "Motion reel",
+        "title": "Video Carousel Block",
         "items": [
           {
-            "title": "Travel — train journey",
-            "videoUrl": "/vecteezy_young-woman-travelling-on-a-train-during-the-daytime-looking_31113935.mp4"
-          },
-          {
-            "title": "Lifestyle clip",
+            "title": "Slide 1 — hosted MP4",
             "videoUrl": "/video-from-rawpixel-id-26889016-sd.mp4",
             "poster": {
               "src": "/placeholder-work-4.svg",
-              "alt": "Poster frame for lifestyle clip"
+              "alt": "Poster frame for carousel slide"
             }
           },
           {
-            "title": "Product motion",
+            "title": "Slide 2 — hosted MP4",
             "videoUrl": "/video-from-rawpixel-id-17154898-sd.mp4",
             "poster": {
               "src": "/placeholder-work-5.svg",
-              "alt": "Poster frame for product motion clip"
+              "alt": "Poster frame for carousel slide"
             }
+          },
+          {
+            "title": "Slide 3 — hosted MP4",
+            "videoUrl": "/vecteezy_young-woman-travelling-on-a-train-during-the-daytime-looking_31113935.mp4"
           }
         ]
       },
       {
+        "_type": "text",
+        "title": "Video Carousel Block — swipeable reel",
+        "body": "<p>Horizontal carousel for motion reels, product demos, or testimonial clips. Each slide supports a hosted MP4, optional poster image, and title.</p>"
+      },
+      {
         "_type": "cta",
-        "label": "Start a project",
+        "label": "CTA Block — Start a project",
         "href": "/contact"
+      },
+      {
+        "_type": "text",
+        "title": "CTA Block",
+        "body": "<p>Standalone call-to-action button for conversion moments — book a call, view pricing, or download a deck. Place it anywhere in the page flow.</p>"
       }
     ]
   },
@@ -124,8 +154,8 @@
     "blocks": [
       {
         "_type": "contact",
-        "title": "Get in touch",
-        "subtitle": "Tell us about your timeline, scope, and CMS preferences. This form is a front-end placeholder—wire it to your email or CRM in a derived project.",
+        "title": "Contact Block",
+        "subtitle": "Contact form with email, phone, location, and social links. Wire the submit action to your CRM or email service in a derived project — the layout and fields are ready out of the box.",
         "email": "hello@example.com",
         "phone": "+1 (555) 010-2000",
         "location": "Remote · US Eastern",
@@ -135,11 +165,6 @@
           { "label": "GitHub", "href": "https://github.com" },
           { "label": "Dribbble", "href": "https://dribbble.com" }
         ]
-      },
-      {
-        "_type": "text",
-        "title": "Availability",
-        "body": "<p>New engagements are typically booked four to six weeks out. For template questions or contributions, open an issue in the repository or reach out through the channels above.</p>"
       }
     ]
   }

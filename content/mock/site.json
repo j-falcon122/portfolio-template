@@ -4,9 +4,9 @@
   "singlePageSectionSlugs": ["home", "about", "work", "contact"],
   "nav": [
     { "label": "Home", "href": "/" },
-    { "label": "About", "href": "/about" },
-    { "label": "Work", "href": "/work" },
+    { "label": "Content", "href": "/about" },
+    { "label": "Media", "href": "/work" },
     { "label": "Contact", "href": "/contact" }
   ],
-  "footerText": "© Portfolio Template"
+  "footerText": "Composable content blocks · Mock or Sanity CMS · Next.js"
 }
