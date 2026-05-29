@@ -39,11 +39,16 @@ html {
   --video-carousel-width: 80vw;
 }
 
-/* Single-page stack: one viewport per section (no scroll-snap — it breaks hash nav) */
+/* Single-page stack: one viewport per nav section (hash targets), except home */
 .page-section {
   min-height: 100dvh;
   min-height: 100vh;
   scroll-margin-top: var(--header-height);
+}
+
+/* Home stacks hero + intro text — height follows content, not one viewport per block */
+.page-section--home {
+  min-height: auto;
 }
 
 .page-section__inner {
@@ -53,15 +58,70 @@ html {
   width: 100%;
 }
 
-.page-section--home .page-section__inner > section {
-  flex: 1;
+.page-section__title {
+  flex: 0 0 auto;
+  align-self: stretch;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--page-content-max);
+  margin: 0 auto;
+  padding-top: calc(var(--header-height) + 0.75rem);
+  padding-inline: var(--page-gutter);
+  padding-bottom: 1rem;
+  text-align: center;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.15;
+  font-weight: 700;
+  color: #171717;
+}
+
+.page-section--home .page-section__inner {
+  min-height: auto;
+}
+
+.page-section--home .page-section__inner > section.text-block {
+  flex: 0 0 auto;
+  min-height: auto;
+}
+
+.page-section--about .page-section__inner {
+  justify-content: flex-start;
+}
+
+.page-section--contact {
   min-height: 100dvh;
   min-height: 100vh;
 }
 
-.page-section--about .page-section__inner,
 .page-section--contact .page-section__inner {
+  justify-content: flex-start;
+  min-height: 100dvh;
+  min-height: 100vh;
+}
+
+.page-section--contact .contact-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-height: 0;
+  padding-block: 0 2rem;
+}
+
+.page-section--contact .contact-block__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  width: 100%;
+  max-width: var(--page-content-max);
+  box-sizing: border-box;
+}
+
+.page-section--contact .contact-block__title,
+.page-section--contact .contact-block__subtitle {
+  display: none;
 }
 
 @media (prefers-color-scheme: dark) {

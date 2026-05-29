@@ -28,6 +28,9 @@ export default async function HomePage() {
             aria-label={p?.title || slug}
           >
             <div className="page-section__inner">
+              {slug !== "home" && p?.title ? (
+                <h2 className="page-section__title">{p.title}</h2>
+              ) : null}
               <BlockRenderer blocks={p?.blocks || []} />
             </div>
           </section>
