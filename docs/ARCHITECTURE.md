@@ -49,3 +49,14 @@ Before adding new code, ask:
 - Can it stay generic without coupling to one business context?
 
 If the answer is mostly "no", implement it in the derived project repo, not here.
+
+## Shared header visibility
+
+Use `useAutoHideHeader` from `portfolio-core/lib/useAutoHideHeader` when a derived
+site needs auto-hide behavior without copying scroll listeners:
+
+- `mode: "near-top"` — template default (hide after scroll; reveal near top / focus)
+- `mode: "scroll-direction"` — hide on scroll down within a media query; reveal on
+  scroll up, tap, or `forceVisible` (e.g. open mobile menu)
+
+Keep visual chrome (CSS / Tailwind) in the consuming app.
